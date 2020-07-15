@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Functions: matrix_shape
-              add_matrices"""
+"""Functions: matrix_shape, add_matrices"""
 
 
 def matrix_shape(matrix):
@@ -23,6 +22,11 @@ def add_matrices(mat1, mat2):
         if(len(matrix_shape(mat1)) == 4):
             return([[[[mat1[i][j][k][l] + mat2[i][j][k][l]
                     for l in range(len(mat1[i][j][k]))]
+                    for k in range(len(mat1[i][j]))]
+                    for j in range(len(mat1[i]))]
+                    for i in range(len(mat1))])
+        elif(len(matrix_shape(mat1)) == 3):
+            return([[[mat1[i][j][k] + mat2[i][j][k]
                     for k in range(len(mat1[i][j]))]
                     for j in range(len(mat1[i]))]
                     for i in range(len(mat1))])
