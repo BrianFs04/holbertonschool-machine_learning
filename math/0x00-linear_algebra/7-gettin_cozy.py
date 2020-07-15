@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Concatenates two matrices along a specific axis"""
+"""Function cat_matrices2D"""
 
 
 def cat_matrices2D(mat1, mat2, axis=0):
