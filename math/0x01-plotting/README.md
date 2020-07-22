@@ -5,7 +5,7 @@ Plot `y` as a line graph:
 * `y` should be plotted as a solid red line
 * The x-axis should range from 0 to 10
 
-![Line Graph](https://i.ibb.co/r4XMJwd/Line-Graph.png)
+![Line Graph](https://i.ibb.co/Mh7gXzX/Line-Graph.png)
 
 ### [1. Scatter](./1-scatter.py)
 Plot `x ↦ y ` as a scatter plot:
@@ -14,7 +14,7 @@ Plot `x ↦ y ` as a scatter plot:
 * The title should be `Men's Height vs Weight`
 * The data should be plotted as magenta points
 
-![Scatter](https://i.ibb.co/TgH0NQS/Scatter.png)
+![Scatter](https://i.ibb.co/r7HH4hX/Scatter.png)
 
 ### [2. Change of scale](./2-change_scale.py)
 Plot `x ↦ y ` as a line graph:
@@ -24,7 +24,7 @@ Plot `x ↦ y ` as a line graph:
 * The y-axis should be logarithmically scaled
 * The x-axis should range from 0 to 28650
 
-![Change of scale](https://i.ibb.co/SVk3Cpf/Change-of-scale.png)
+![Change of scale](https://i.ibb.co/rG94TV9/Change-of-scale.png)
 
 
 ### [3. Two is better than one](./3-two.py)
@@ -38,7 +38,7 @@ Plot `x ↦ y1 ` and `x ↦ y2 ` as line graphs:
 * `x ↦ y2 ` should be plotted with a solid green line
 * A legend labeling `x ↦ y1 ` as `C-14 ` and `x ↦ y2 ` as `Ra-226 ` should be placed in the upper right hand corner of the plot
 
-![Two is better than one](https://i.ibb.co/C5gwVkH/Two-better-than-one.png)
+![Two is better than one](https://i.ibb.co/2tcVPLX/Two-better-than-one.png)
 
 
 ### [4. Frequency](./4-frequency.py)
@@ -49,7 +49,7 @@ Plot a histogram of student scores for a project:
 * The title should be `Project A`
 * The bars should be outlined in black
 
-![Frecuency](https://i.ibb.co/cw0zG33/Frequency.png)
+![Frecuency](https://i.ibb.co/Qb7nJXK/Frequency.png)
 
 ### [5. All in One](./5-all_in_one.py)
 Plot all 5 previous graphs in one figure:
@@ -58,7 +58,7 @@ Plot all 5 previous graphs in one figure:
 * The last plot should take up two column widths (see below)
 * The title of the figure should be `All in One`
 
-![All in One](https://i.ibb.co/ZTHfDtR/All-in-One.png)
+![All in One](https://i.ibb.co/K5D86zK/All-in-One.png)
 
 ### [6. Stacking Bars](./6-bars.py)
 Plot a stacked bar graph:
@@ -80,7 +80,7 @@ Plot a stacked bar graph:
 * The y-axis should range from 0 to 80 with ticks every 10 units
 * The title should be `Number of Fruit per Person`
 
-![Stacking bars](https://i.ibb.co/VwN75XX/Stacking-bars.png)
+![Stacking bars](https://i.ibb.co/dfhFgT2/Stacking-bars.png)
 
 ### [7. Gradient](./100-gradient.py)
 Plot of sampled elevations on a mountain:
@@ -90,7 +90,7 @@ Plot of sampled elevations on a mountain:
 * A colorbar should be used to display elevation
 * The colorbar should be labeled `elevation (m)`
 
-![Gradient](https://i.ibb.co/tQ0Pq9z/Gradient.png)
+![Gradient](https://i.ibb.co/pjXcP19/Gradient.png)
 
 ### [8. PCA](./101-pca.py)
 Visualize the data in 3D:
@@ -107,7 +107,7 @@ Visualize the data in 3D:
 * The x, y, and z axes should be labeled `U1`, `U2`, and `U3`, respectively
 * The data points should be colored based on their labels using the `plasma` color map
 
-![PCA](https://i.ibb.co/6cKBfHt/PCA.png)
+![PCA](https://i.ibb.co/P4BHs7j/PCA.png)
 
 ---
 ## Author
