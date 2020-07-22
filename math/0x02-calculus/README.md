@@ -66,7 +66,7 @@ Write a function `def poly_derivative(poly):` that calculates the derivative of 
 ### [16. Double whammy](./16-double)
 ![Integral](https://i.ibb.co/GTJsvtc/16.png)
 
-### [17. Integrate](./13-definite)
+### [17. Integrate](./17-integrate.py)
 Write a function `def poly_integral(poly, C=0):` that calculates the integral of a polynomial:
 
 * `poly` is a list of coefficients representing a polynomial
