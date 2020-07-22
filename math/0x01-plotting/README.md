@@ -5,7 +5,7 @@ Plot `y` as a line graph:
 * `y` should be plotted as a solid red line
 * The x-axis should range from 0 to 10
 
-![Line Graph](https://i.ibb.co/r4XMJwd/Line-Graph.png)
+![Line Graph](https://i.ibb.co/JpJkntx/Line-Graph.png)
 
 ### [1. Scatter](./1-scatter.py)
 Plot `x ↦ y ` as a scatter plot:
