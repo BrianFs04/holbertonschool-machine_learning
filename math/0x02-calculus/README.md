@@ -31,7 +31,7 @@
 ![Partial](https://i.ibb.co/tXjXHVr/8.png)
 
 ### [9. Our life is the sum total of all the decisions we make every day, and those decisions are determined by our priorities](./9-sum_total.py)
-Write a function `def summation_i_squared(n):` that calculates 
+Write a function `def summation_i_squared(n):` that calculates\
 ![](https://i.ibb.co/DYDxtPH/9.png)
 * `n` is the stopping condition
 * Return the integer value of the sum
