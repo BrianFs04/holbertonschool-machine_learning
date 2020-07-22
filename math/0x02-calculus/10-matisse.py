@@ -6,5 +6,7 @@ def poly_derivative(poly):
     """Function that calculates the derivative of a polynomial"""
     res = []
     for i in range(1, len(poly)):
+        if type(poly[i]) is not int:
+            return None
         res.append(poly[i] * i)
     return(res)
