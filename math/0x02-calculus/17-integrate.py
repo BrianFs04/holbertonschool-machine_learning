@@ -8,9 +8,9 @@ def poly_integral(poly, C=0):
         return None
     res = [C]
     for i in range(len(poly)):
-        if type(poly[i]) is not int:
-            return None
-        if (i == 0) or (poly[i] == 0):
+        if type(poly[i]) is float:
+            res.append(poly[i] * 10 / ((i + 1) * 10))
+        elif (i == 0) or (poly[i] == 0):
             res.append(poly[i])
         else:
             inte = poly[i] / (i + 1)
