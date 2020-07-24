@@ -4,7 +4,7 @@
 
 def poly_integral(poly, C=0):
     """Function that calculates the integral of a polynomial"""
-    if type(C) is not int:
+    if len(poly) == 0 and C:
         return None
     res = [C]
     for i in range(len(poly)):
