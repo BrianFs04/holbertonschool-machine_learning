@@ -13,5 +13,9 @@ def poly_integral(poly, C=0):
         if (i == 0) or (poly[i] == 0):
             res.append(poly[i])
         else:
-            res.append(poly[i] / (i + 1))
+            inte = poly[i] / (i + 1)
+            if inte % 1  == 0:
+                res.append(int(inte))
+            else:
+                res.append(inte)
     return(res)
