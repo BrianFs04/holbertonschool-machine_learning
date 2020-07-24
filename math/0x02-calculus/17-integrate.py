@@ -8,6 +8,8 @@ def poly_integral(poly, C=0):
         return None
     res = [C]
     for i in range(len(poly)):
+        if not isinstance(poly[i], (int, float)):
+            return None
         if type(poly[i]) is float:
             res.append(poly[i] * 10 / ((i + 1) * 10))
         elif (i == 0) or (poly[i] == 0):
