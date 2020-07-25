@@ -12,12 +12,9 @@ def poly_integral(poly, C=0):
             return None
         if sum(poly) == 0:
             continue
-        if type(poly[i]) is float:
-            res.append(poly[i] * 10 / ((i + 1) * 10))
+        inte = poly[i] / (i + 1)
+        if inte % 1 == 0:
+            res.append(int(inte))
         else:
-            inte = poly[i] / (i + 1)
-            if inte % 1 == 0:
-                res.append(int(inte))
-            else:
-                res.append(inte)
+            res.append(inte)
     return(res)
