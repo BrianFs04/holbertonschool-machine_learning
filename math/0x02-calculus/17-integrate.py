@@ -14,8 +14,6 @@ def poly_integral(poly, C=0):
             continue
         if type(poly[i]) is float:
             res.append(poly[i] * 10 / ((i + 1) * 10))
-        elif (i == 0) or (poly[i] == 0):
-            res.append(poly[i])
         else:
             inte = poly[i] / (i + 1)
             if inte % 1 == 0:
