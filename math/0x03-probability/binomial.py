@@ -14,7 +14,7 @@ class Binomial:
         if data is None:
             if n <= 0:
                 raise ValueError('n must be a positive value')
-            if p <= 0 and p >= 1:
+            if p < 0 and p > 1:
                 raise ValueError('p must be greater than 0 and less than 1')
         else:
             if type(data) is not list:
@@ -57,11 +57,16 @@ class Binomial:
             k = int(k)
         if k < 0:
             return 0
-        return(self.nCr(self.n, k) * (self.p**k) * (q**(self.n - k)))
+        pmf = self.nCr(self.n, k) * (self.p**k) * (q**(self.n - k))
+        return(pmf)
 
     def cdf(self, k):
         """Calculates the value of the CDF for a given number of “successes”"""
         cdf = 0
+        if type(k) is not int:
+            k = int(k)
+        if k < 0:
+            return 0
         for i in range(k + 1):
             cdf += self.pmf(i)
         return(cdf)
