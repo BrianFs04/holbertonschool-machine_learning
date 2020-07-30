@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import math
 """Class Normal"""
 e = 2.7182818285
 π = 3.1415926536

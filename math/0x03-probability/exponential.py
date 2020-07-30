@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import math
 """Class Exponential"""
 e = 2.7182818285
 
