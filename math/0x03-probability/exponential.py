@@ -26,12 +26,12 @@ class Exponential:
         """Calculates the value of the PDF for a given time period"""
         if x < 0:
             return 0
-        pdf = self.lambtha*e**-self.lambtha*x
+        pdf = self.lambtha* (e**(-self.lambtha*x))
         return(pdf)
 
     def cdf(self, x):
         """Calculates the value of the CDF for a given time period"""
         if x < 0:
             return 0
-        cdf = 1 - e**-self.lambtha*x
+        cdf = 1 - (e**(-self.lambtha*x))
         return(cdf)
