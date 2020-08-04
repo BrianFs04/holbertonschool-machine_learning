@@ -53,7 +53,7 @@ class Neuron:
         predict = self.forward_prop(X)
         cond = np.where(predict >= 0.5, 1, 0)
         return(cond, self.cost(Y, predict))
-    
+
     def gradient_descent(self, X, Y, A, alpha=0.05):
         """Calculates one pass of gradient descent on the neuron"""
         m = np.shape(Y)
