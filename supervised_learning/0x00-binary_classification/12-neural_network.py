@@ -74,7 +74,7 @@ class NeuralNetwork:
         return(cost)
 
     def evaluate(self, X, Y):
-        """Evaluates the neuron’s predictions"""
+        """Evaluates the neural network’s predictions"""
         A1, A2 = self.forward_prop(X)
         cont = np.where(A2 >= 0.5, 1, 0)
         return(cont, self.cost(Y, A2))
