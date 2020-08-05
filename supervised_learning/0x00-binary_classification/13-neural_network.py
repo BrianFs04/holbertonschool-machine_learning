@@ -85,10 +85,10 @@ class NeuralNetwork:
         devz2 = A2 - Y
         devW2 = np.matmul(devz2, A1.T) / m[1]
         devb2 = np.sum(devz2, axis=1, keepdims=True) / m[1]
-        self.__W2 = self.__W2 - alpha * devW2
-        self.__b2 = self.__b2 - alpha * devb2
-        devz1 = np.matmul(self.__W2.T, devz2) * (A1 * (1 - A1))
+        devz1 = np.matmul(self.__W2.T, devz2) * (A1*(1 - A1))
         devW1 = np.matmul(devz1, X.T) / m[1]
         devb1 = np.sum(devz1, axis=1, keepdims=True) / m[1]
         self.__W1 = self.__W1 - alpha * devW1
         self.__b1 = self.__b1 - alpha * devb1
+        self.__W2 = self.__W2 - alpha * devW2
+        self.__b2 = self.__b2 - alpha * devb2
