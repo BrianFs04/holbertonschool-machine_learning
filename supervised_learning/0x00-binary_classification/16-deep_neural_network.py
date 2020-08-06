@@ -18,10 +18,11 @@ class DeepNeuralNetwork:
         self.L = len(layers)
         self.cache = {}
         self.weights = {}
+        ls = nx
         for l in range(self.L):
-            heetal = np.random.randn(layers[l], nx)*np.sqrt(2 / nx)
+            heetal = np.random.randn(layers[l], ls)*np.sqrt(2 / ls)
             if layers[l] < 1:
                 raise ValueError('layers must be a list of positive integers')
             self.weights['W' + str(l + 1)] = heetal
             self.weights['b' + str(l + 1)] = np.zeros((layers[l], 1))
-            nx = layers[l]
+            ls = layers[l]
