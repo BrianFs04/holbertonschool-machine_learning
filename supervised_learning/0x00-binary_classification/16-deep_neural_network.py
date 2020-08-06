@@ -20,7 +20,7 @@ class DeepNeuralNetwork:
         self.weights = {}
         for l in range(self.L):
             heetal = np.random.randn(layers[l], nx)*np.sqrt(2 / nx)
-            if type(layers[l]) is not int or layers[l] < 1:
+            if type(layers[l]) is not int or layers[l] <= 0:
                 raise TypeError('layers must be a list of positive integers')
             self.weights['W' + str(l + 1)] = heetal
             self.weights['b' + str(l + 1)] = np.zeros((layers[l], 1))
