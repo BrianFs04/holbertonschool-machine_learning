@@ -59,7 +59,7 @@ class DeepNeuralNetwork:
             b = self.__weights['b' + str(l + 2)]
             zx = np.matmul(w, a) + b
             self.__cache['A' + str(l + 2)] = self.sigmoid(zx)
-        return(self.__cache['A3'], self.__cache)
+        return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
         """Calculates the cost of the model using logistic regression"""
@@ -70,7 +70,6 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        dicta = dict(self.__cache)
-        dicta['A3'], dicta = self.forward_prop(X)
-        cont = np.where(dicta['A3'] >= 0.5, 1, 0)
-        return(cont, self.cost(Y, dicta['A3']))
+        A3, self.__cache = self.forward_prop(X)
+        cont = np.where(A3 >= 0.5, 1, 0)
+        return(cont, self.cost(Y, A3))
