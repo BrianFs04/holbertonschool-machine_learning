@@ -70,7 +70,7 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        dicta = {}
+        dicta = dict(self.__cache)
         dicta['A3'], dicta = self.forward_prop(X)
         cont = np.where(dicta['A3'] >= 0.5, 1, 0)
         return(cont, self.cost(Y, dicta['A3']))
