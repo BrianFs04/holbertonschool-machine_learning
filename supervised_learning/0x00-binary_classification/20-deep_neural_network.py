@@ -50,15 +50,12 @@ class DeepNeuralNetwork:
     def forward_prop(self, X):
         """Calculates the forward propagation of the neural network"""
         self.__cache['A0'] = X
-        z1 = np.matmul(self.__weights['W' + str(1)],
-                       X) + self.__weights['b' + str(1)]
-        self.__cache['A' + str(1)] = self.sigmoid(z1)
-        for l in range(self.__L - 1):
-            w = self.__weights['W' + str(l + 2)]
-            a = self.__cache['A' + str(l + 1)]
-            b = self.__weights['b' + str(l + 2)]
+        for l in range(self.__L):
+            w = self.__weights['W' + str(l + 1)]
+            a = self.__cache['A' + str(l)]
+            b = self.__weights['b' + str(l + 1)]
             zx = np.matmul(w, a) + b
-            self.__cache['A' + str(l + 2)] = self.sigmoid(zx)
+            self.__cache['A' + str(l + 1)] = self.sigmoid(zx)
         return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
