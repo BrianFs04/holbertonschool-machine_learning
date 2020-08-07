@@ -76,13 +76,13 @@ class DeepNeuralNetwork:
         devsz = []
         m = np.shape(Y)
         devlz = devsz.append(self.__cache['A' + str(self.__L)] - Y)
-        for l in range(self.__L + 1, 1, -1):
-            AT = self.__cache['A' + str(l - 2)].T
-            WT = self.__weights['W' + str(l - 1)].T
-            A = self.__cache['A' + str(l - 2)]
+        for l in range(self.__L, 0, -1):
+            AT = self.__cache['A' + str(l - 1)].T
+            WT = self.__weights['W' + str(l)].T
+            A = self.__cache['A' + str(l - 1)]
             devg = (A * (1 - A))
-            devWx = np.matmul(devsz[4 - l], AT) / m[1]
-            devbx = np.sum(devsz[4 - l], axis=1, keepdims=True) / m[1]
-            devzx = devsz.append(np.matmul(WT, devsz[4 - l]) * devg)
-            self.__weights['W' + str(l - 1)] -= alpha * devWx
-            self.__weights['b' + str(l - 1)] -= alpha * devbx
+            devWx = np.matmul(devsz[3 - l], AT) / m[1]
+            devbx = np.sum(devsz[3 - l], axis=1, keepdims=True) / m[1]
+            devzx = devsz.append(np.matmul(WT, devsz[3 - l]) * devg)
+            self.__weights['W' + str(l)] -= alpha * devWx
+            self.__weights['b' + str(l)] -= alpha * devbx
