@@ -87,7 +87,6 @@ class DeepNeuralNetwork:
             self.__weights['W' + str(l)] -= alpha * devWx
             self.__weights['b' + str(l)] -= alpha * devbx
 
-
     def train(self, X, Y, iterations=5000, alpha=0.05):
         """Trains the deep neural network"""
         if type(iterations) is not int:
