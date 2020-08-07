@@ -81,8 +81,8 @@ class DeepNeuralNetwork:
             WT = self.__weights['W' + str(l)].T
             A = self.__cache['A' + str(l - 1)]
             devg = (A * (1 - A))
-            devWx = np.matmul(devsz[3 - l], AT) / m[1]
-            devbx = np.sum(devsz[3 - l], axis=1, keepdims=True) / m[1]
-            devzx = devsz.append(np.matmul(WT, devsz[3 - l]) * devg)
+            devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
+            devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
+            devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
             self.__weights['W' + str(l)] -= alpha * devWx
             self.__weights['b' + str(l)] -= alpha * devbx
