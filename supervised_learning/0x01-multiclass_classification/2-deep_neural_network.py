@@ -129,10 +129,8 @@ class DeepNeuralNetwork:
         """Saves the instance object to a file in pickle format"""
         ext = os.path.splitext(filename)[-1].lower()
         if ext != '.pkl':
-            filename = filename + '.pkl'
-
-        with open(filename, 'wb') as fileObject:
-            pickle.dump(self, fileObject)
+            with open(filename + '.pkl', 'wb') as fileObject:
+                pickle.dump(self, fileObject)
 
     @staticmethod
     def load(filename):
