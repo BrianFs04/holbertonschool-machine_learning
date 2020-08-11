@@ -127,21 +127,16 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """Saves the instance object to a file in pickle format"""
-        fileObject = open(filename, 'wb')
-        pickle.dump(self, fileObject)
-        fileObject.close()
         ext = os.path.splitext(filename)[-1].lower()
         if ext != '.pkl':
-            os.rename(filename, filename + '.pkl')
+            with open(filename + '.pkl', 'rb') as fileObject:
+                pickle.dump(self, fileObject)
 
     @staticmethod
     def load(filename):
         """Loads a pickled DeepNeuralNetwork object"""
-        if not filename:
+        if not(os.path.exists(filename)):
             return None
-        if os.path.exists(filename) is not True:
-            return None
-        else:
-            with open(filename, 'rb') as fileObject:
-                x = pickle.load(fileObject)
-                return(x)
+        with open(filename, 'rb') as fileObject:
+            x = pickle.load(fileObject)
+            return(x)
