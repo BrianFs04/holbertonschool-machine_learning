@@ -139,6 +139,7 @@ class DeepNeuralNetwork:
         """Loads a pickled DeepNeuralNetwork object"""
         if not os.path.exists(filename) or not filename:
             return None
-        with open(filename, 'rb') as fileObject:
-            x = pickle.load(fileObject)
-            return(x)
+        else:
+            with open(filename, 'rb') as fileObject:
+                x = pickle.load(fileObject)
+                return(x)
