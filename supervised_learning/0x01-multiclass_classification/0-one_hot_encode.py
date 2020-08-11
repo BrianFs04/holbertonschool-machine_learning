@@ -5,12 +5,6 @@ import numpy as np
 
 def one_hot_encode(Y, classes):
     """Converts a numeric label vector into a one-hot matrix"""
-    if np.size(Y) > classes or type(Y) is not np.ndarray or\
-       type(classes) is not int:
-        return None
-    for i in Y:
-        if type(i) is not np.int64 or i >= classes:
-            return None
     shape = (classes, np.size(Y))
     one_hot = np.zeros(shape)
     cols = np.arange(np.size(Y))
