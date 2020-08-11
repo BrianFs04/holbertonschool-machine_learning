@@ -133,11 +133,10 @@ class DeepNeuralNetwork:
         if ext != '.pkl':
             os.rename(filename, filename + '.pkl')
 
-    @staticmethod
     def load(filename):
         """Loads a pickled DeepNeuralNetwork object"""
         if not(os.path.exists(filename)) or not filename:
             return None
         with open(filename, 'rb') as fileObject:
             x = pickle.load(fileObject)
-        return(x)
+            return(x)
