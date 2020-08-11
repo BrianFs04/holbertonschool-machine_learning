@@ -130,7 +130,7 @@ class DeepNeuralNetwork:
         ext = os.path.splitext(filename)[-1]
         if ext != '.pkl':
             filename = filename + '.pkl'
-        with open(filename + '.pkl', 'wb') as fileObject:
+        with open(filename, 'wb') as fileObject:
             pickle.dump(self, fileObject)
 
     @staticmethod
