@@ -129,6 +129,7 @@ class DeepNeuralNetwork:
         """Saves the instance object to a file in pickle format"""
         with open(filename, 'rb') as fileObject:
             pickle.dump(self, fileObject)
+        fileObject.close()
         ext = os.path.splitext(filename)[-1].lower()
         if ext != '.pkl':
             os.rename(filename, filename + '.pkl')
