@@ -9,7 +9,7 @@ def one_hot_decode(one_hot):
     m = one_hot.shape[1]
     if type(one_hot) is not np.ndarray:
         return None
-    if classes > m:
+    if m > classes:
         return None
     labels = np.argmax(one_hot, axis=0)
     return(labels)
