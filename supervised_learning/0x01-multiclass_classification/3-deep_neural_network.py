@@ -69,10 +69,10 @@ class DeepNeuralNetwork:
         return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
-        """calculates the cost of the model using logistic regression"""
+        """Calculates the cost of the model using logistic regression"""
         m = len(A[0])
         cost = -np.sum((np.log(A) * Y) / m)
-        return cost
+        return(cost)
 
     def evaluate(self, X, Y):
         """evaluates the network's predictions"""
