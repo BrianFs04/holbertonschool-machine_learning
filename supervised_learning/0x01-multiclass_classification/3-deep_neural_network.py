@@ -55,17 +55,17 @@ class DeepNeuralNetwork:
         return(np.exp(x) / np.sum(np.exp(x), axis=0, keepdims=True))
 
     def forward_prop(self, X):
-        """calculates the forward propagation of a deep neural network"""
-        self.__cache['A0'] = X
-        for i in range(self.__L):
-            W = self.__weights['W' + str(i + 1)]
-            b = self.__weights['b' + str(i + 1)]
-            Z = np.matmul(W, self.__cache['A' + str(i)]) + b
-            if i != self.__L - 1:
-                self.__cache['A' + str(i + 1)] = self.sigmoid(Z)
+        """Calculates the forward propagation of the neural network"""
+        for ls in range(self.__L):
+            w = self.__weights['W' + str(ls + 1)]
+            a = self.__cache['A' + str(ls)]
+            b = self.__weights['b' + str(ls + 1)]
+            zx = np.matmul(w, a) + b
+            if ls != self.__L - 1:
+                self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
             else:
-                self.__cache['A' + str(i + 1)] = self.softmax(Z)
-        return self.__cache['A' + str(self.__L)], self.__cache
+                self.__cache['A' + str(self.__L)] = self.softmax(zx)
+        return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
         """calculates the cost of the model using logistic regression"""
