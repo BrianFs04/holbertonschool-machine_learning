@@ -75,9 +75,10 @@ class DeepNeuralNetwork:
         return(cost)
 
     def evaluate(self, X, Y):
-        """evaluates the network's predictions"""
-        A, cache = self.forward_prop(X)
-        return np.where(A < 0.5, 0, 1), self.cost(Y, A)
+        """Evaluates the neural network’s predictions"""
+        A3, self.__cache = self.forward_prop(X)
+        cont = np.where(A3 >= 0.5, 1, 0)
+        return(cont, self.cost(Y, A3))
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent on the neural network"""
