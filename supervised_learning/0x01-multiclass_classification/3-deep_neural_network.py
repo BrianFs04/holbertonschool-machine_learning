@@ -55,30 +55,28 @@ class DeepNeuralNetwork:
         return(np.exp(x) / np.sum(np.exp(x), axis=0, keepdims=True))
 
     def forward_prop(self, X):
-        """Calculates the forward propagation of the neural network"""
+        """calculates the forward propagation of a deep neural network"""
         self.__cache['A0'] = X
-        for ls in range(self.__L):
-            w = self.__weights['W' + str(ls + 1)]
-            a = self.__cache['A' + str(ls)]
-            b = self.__weights['b' + str(ls + 1)]
-            zx = np.matmul(w, a) + b
-            if ls != self.__L - 1:
-                self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
+        for i in range(self.__L):
+            W = self.__weights['W' + str(i + 1)]
+            b = self.__weights['b' + str(i + 1)]
+            Z = np.matmul(W, self.__cache['A' + str(i)]) + b
+            if i != self.__L - 1:
+                self.__cache['A' + str(i + 1)] = self.sigmoid(Z)
             else:
-                self.__cache['A' + str(self.__L)] = self.softmax(zx)
-            return(self.__cache['A' + str(self.__L)], self.__cache)
+                self.__cache['A' + str(i + 1)] = self.softmax(Z)
+        return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
-        """Calculates the cost of the model using logistic regression"""
+        """calculates the cost of the model using logistic regression"""
         m = len(A[0])
         cost = -np.sum((np.log(A) * Y) / m)
-        return(cost)
+        return cost
 
     def evaluate(self, X, Y):
-        """Evaluates the neural network’s predictions"""
-        A3, self.__cache = self.forward_prop(X)
-        cont = np.where(A3 >= 0.5, 1, 0)
-        return(cont, self.cost(Y, A3))
+        """evaluates the network's predictions"""
+        A, cache = self.forward_prop(X)
+        return np.where(A < 0.5, 0, 1), self.cost(Y, A)
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent on the neural network"""
