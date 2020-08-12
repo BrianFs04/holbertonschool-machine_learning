@@ -51,7 +51,8 @@ class DeepNeuralNetwork:
 
     @property
     def activation(self):
-        """Represents the type of activation function used in the hidden layers"""
+        """Represents the type of activation
+        function used in the hidden layers"""
         return(self.__activation)
 
     def sigmoid(self, x):
