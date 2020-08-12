@@ -78,7 +78,7 @@ class DeepNeuralNetwork:
             if ls != self.__L - 1:
                 if self.__activation is 'sig':
                     self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
-                else:
+                if self.__activation is 'tahn':
                     self.__cache['A' + str(ls + 1)] = self.tahn(zx)
             else:
                 self.__cache['A' + str(self.__L)] = self.softmax(zx)
