@@ -76,13 +76,10 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        shape = (np.size(X), np.size(Y))
-        one_hot = np.zeros(shape)
-        cols = np.arange(np.size(Y))
-        one_hot[Y, cols] = 1
-        one_hot, self.__cache = self.forward_prop(X)
-        return(one_hot, self.cost(Y, one_hot))
-
+        A3, self.__cache = self.forward_prop(X)
+        cont = np.where(A3 >= 0.5, 1, 0)
+        return(cont, self.cost(Y, A3))
+    
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent on the neural network"""
         devsz = []
