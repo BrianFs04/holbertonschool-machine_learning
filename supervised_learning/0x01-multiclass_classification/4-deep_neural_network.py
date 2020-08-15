@@ -1,70 +1,69 @@
 #!/usr/bin/env python3
 """this module contains the a deep neural network class"""
-
 import numpy as np
+import matplotlib.pyplot as plt
 import pickle
 import os
 
 
-def softmax(a):
-    """returns the softmax activation function"""
-    return np.exp(a)/np.sum(np.exp(a), axis=0, keepdims=True)
-
-
-def sigmoid(a):
-    """sigmoid activation function """
-    return 1/(1 + np.exp(-a))
-
-
-def tanh(a):
-    """ returns a tanh activation"""
-    return np.tanh(a)
-
-
 class DeepNeuralNetwork:
-    """defines a deep neural network"""
-    def __init__(self, nx, layers, activation='sig'):
-        """class constructor"""
-        act = ['sig', 'tanh']
-        if activation not in act:
-            raise ValueError("activation must be 'sig' or 'tanh'")
-        if type(nx) != int:
-            raise TypeError("nx must be an integer")
-        if nx < 1:
-            raise ValueError("nx must be a positive integer")
-        if type(layers) != list or len(layers) == 0:
-            raise TypeError("layers must be a list of positive integers")
-        self.__activation = activation
-        self.__L = len(layers)
-        self.__cache = {}
-        self.__weights = {}
-        for i in range(self.L):
-            if type(layers[i]) != int or layers[i] < 1:
-                raise TypeError("layers must be a list of positive integers")
-            self.weights['W' + str(i + 1)] = (np.random.randn(layers[i], nx) *
-                                              np.sqrt(2./nx))
-            nx = layers[i]
-            self.weights['b' + str(i + 1)] = np.zeros((layers[i], 1))
+        """Defines a neural defines a deep neural network
+    performing binary classification"""
+        def __init__(self, nx, layers, activation='sig'):
+            """Constructor method"""
+            if type(nx) is not int:
+                raise TypeError('nx must be an integer')
+            if nx < 1:
+                raise ValueError('nx must be a positive integer')
+            if type(layers) is not list or len(layers) is 0:
+                raise TypeError('layers must be a list of positive integers')
+            if activation is not 'sig' and activation is not 'tanh':
+                raise ValueError("activation must be 'sig' or 'tanh'")
+            self.__L = len(layers)
+            self.__cache = {}
+            self.__weights = {}
+            self.__activation = activation
+
+            for l in range(self.__L):
+                if type(layers[l]) is not int or layers[l] <= 0:
+                    raise TypeError('layers must be a list of positive integers')
+                heetal = np.random.randn(layers[l], nx)*np.sqrt(2 / nx)
+                self.__weights['W' + str(l + 1)] = heetal
+                self.__weights['b' + str(l + 1)] = np.zeros((layers[l], 1))
+                nx = layers[l]
 
     @property
     def L(self):
-        """ returns the L privatized property"""
-        return self.__L
+        """The number of layers in the neural network"""
+        return(self.__L)
 
     @property
     def cache(self):
-        """return the privatized cache property """
-        return self.__cache
+        """A dictionary to hold all intermediary values of the network"""
+        return(self.__cache)
 
     @property
     def weights(self):
-        """returns the privatized weight property """
-        return self.__weights
+        """A dictionary to hold all weights and biased of the network"""
+        return(self.__weights)
 
     @property
     def activation(self):
-        """ returns the activation method to use """
-        return self.__activation
+        """Represents the type of activation
+        function used in the hidden layers"""
+        return(self.__activation)
+
+    def sigmoid(self, x):
+        """Returns sigmoid function"""
+        return(1/(1 + np.exp(-x)))
+
+    def softmax(self, x):
+        """Returns softmax function"""
+        return(np.exp(x) / np.sum(np.exp(x), axis=0, keepdims=True))
+
+    def tanh(self, x):
+        """Returns tanh function"""
+        return(np.tanh(x))
 
     def forward_prop(self, X):
         """calculates the forward propagation of a deep neural network"""
@@ -75,11 +74,11 @@ class DeepNeuralNetwork:
             Z = np.matmul(W, self.__cache['A' + str(i)]) + b
             if i != self.__L - 1:
                 if self.__activation == 'sig':
-                    self.__cache['A' + str(i + 1)] = sigmoid(Z)
+                    self.__cache['A' + str(i + 1)] = self.sigmoid(Z)
                 elif self.__activation == 'tanh':
-                    self.__cache['A' + str(i + 1)] = tanh(Z)
+                    self.__cache['A' + str(i + 1)] = self.tanh(Z)
             else:
-                self.__cache['A' + str(i + 1)] = softmax(Z)
+                self.__cache['A' + str(i + 1)] = self.softmax(Z)
         return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
