@@ -19,6 +19,7 @@ class DeepNeuralNetwork:
             raise TypeError('layers must be a list of positive integers')
         if activation is not 'sig' and activation is not 'tanh':
             raise ValueError("activation must be 'sig' or 'tanh'")
+
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = {}
@@ -128,7 +129,7 @@ class DeepNeuralNetwork:
                 raise ValueError('step must be positive and <= iterations')
         x = []
         y = []
-        for i in range(iterations + 1):
+        for i in range(iterations):
             A3, cache = self.forward_prop(X)
             self.gradient_descent(Y, cache, alpha)
             cost = self.cost(Y, A3)
@@ -144,6 +145,7 @@ class DeepNeuralNetwork:
             plt.xlabel('iteration')
             plt.ylabel('cost')
             plt.show()
+
         return(self.evaluate(X, Y))
 
     def save(self, filename):
