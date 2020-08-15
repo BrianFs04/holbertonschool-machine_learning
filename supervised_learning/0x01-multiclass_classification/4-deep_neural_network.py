@@ -83,16 +83,16 @@ class DeepNeuralNetwork:
         return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
-        """calculates the cost of the model using logistic regression"""
+        """Calculates the cost of the model using logistic regression"""
         m = len(A[0])
         cost = -np.sum((np.log(A) * Y) / m)
-        return cost
+        return(cost)
 
     def evaluate(self, X, Y):
-        """evaluates the network's predictions"""
-        A, cache = self.forward_prop(X)
-        A_max = np.amax(A, axis=0)
-        return np.where(A == A_max, 1, 0), self.cost(Y, A)
+        """Evaluates the neural network’s predictions"""
+        A3, cache = self.forward_prop(X)
+        A_max = np.amax(A3, axis=0)
+        return(np.where(A3 == A_max, 1, 0), self.cost(Y, A3))
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """ calculates one pass of the gradient descent on NN"""
