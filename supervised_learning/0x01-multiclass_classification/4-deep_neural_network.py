@@ -130,8 +130,8 @@ class DeepNeuralNetwork:
         x = []
         y = []
         for i in range(iterations):
-            A3, cache = self.forward_prop(X)
-            self.gradient_descent(Y, cache, alpha)
+            A3, self.__cache = self.forward_prop(X)
+            self.gradient_descent(Y, self.__cache, alpha)
             cost = self.cost(Y, A3)
             if verbose is True:
                 if i % step == 0:
