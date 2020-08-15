@@ -108,7 +108,7 @@ class DeepNeuralNetwork:
             A = self.__cache['A' + str(l - 1)]
             if self.__activation is 'sig':
                 devg = (A * (1 - A))
-            if self.__activation is 'tahn':
+            if self.__activation is 'tanh':
                 devg = (1 - (A * A))
             devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
             devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
