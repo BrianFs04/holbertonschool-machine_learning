@@ -1,165 +1,167 @@
 #!/usr/bin/env python3
-"""Class DeepNeuralNetwork"""
+"""this module contains the a deep neural network class"""
+
 import numpy as np
-import matplotlib.pyplot as plt
 import pickle
 import os
 
 
+def softmax(a):
+    """returns the softmax activation function"""
+    return np.exp(a)/np.sum(np.exp(a), axis=0, keepdims=True)
+
+
+def sigmoid(a):
+    """sigmoid activation function """
+    return 1/(1 + np.exp(-a))
+
+
+def tanh(a):
+    """ returns a tanh activation"""
+    return np.tanh(a)
+
+
 class DeepNeuralNetwork:
-    """Defines a neural defines a deep neural network
-    performing binary classification"""
-
+    """defines a deep neural network"""
     def __init__(self, nx, layers, activation='sig'):
-        """Constructor method"""
-        if type(nx) is not int:
-            raise TypeError('nx must be an integer')
-        if nx < 1:
-            raise ValueError('nx must be a positive integer')
-        if type(layers) is not list or len(layers) is 0:
-            raise TypeError('layers must be a list of positive integers')
-        if activation is not 'sig' and activation is not 'tanh':
+        """class constructor"""
+        act = ['sig', 'tanh']
+        if activation not in act:
             raise ValueError("activation must be 'sig' or 'tanh'")
-
+        if type(nx) != int:
+            raise TypeError("nx must be an integer")
+        if nx < 1:
+            raise ValueError("nx must be a positive integer")
+        if type(layers) != list or len(layers) == 0:
+            raise TypeError("layers must be a list of positive integers")
+        self.__activation = activation
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = {}
-        self.__activation = activation
-
-        for l in range(self.__L):
-            if type(layers[l]) is not int or layers[l] <= 0:
-                raise TypeError('layers must be a list of positive integers')
-            heetal = np.random.randn(layers[l], nx)*np.sqrt(2 / nx)
-            self.__weights['W' + str(l + 1)] = heetal
-            self.__weights['b' + str(l + 1)] = np.zeros((layers[l], 1))
-            nx = layers[l]
+        for i in range(self.L):
+            if type(layers[i]) != int or layers[i] < 1:
+                raise TypeError("layers must be a list of positive integers")
+            self.weights['W' + str(i + 1)] = (np.random.randn(layers[i], nx) *
+                                              np.sqrt(2./nx))
+            nx = layers[i]
+            self.weights['b' + str(i + 1)] = np.zeros((layers[i], 1))
 
     @property
     def L(self):
-        """The number of layers in the neural network"""
-        return(self.__L)
+        """ returns the L privatized property"""
+        return self.__L
 
     @property
     def cache(self):
-        """A dictionary to hold all intermediary values of the network"""
-        return(self.__cache)
+        """return the privatized cache property """
+        return self.__cache
 
     @property
     def weights(self):
-        """A dictionary to hold all weights and biased of the network"""
-        return(self.__weights)
+        """returns the privatized weight property """
+        return self.__weights
 
     @property
     def activation(self):
-        """Represents the type of activation
-        function used in the hidden layers"""
-        return(self.__activation)
-
-    def sigmoid(self, x):
-        """Returns sigmoid function"""
-        return(1/(1 + np.exp(-x)))
-
-    def softmax(self, x):
-        """Returns softmax function"""
-        return(np.exp(x) / np.sum(np.exp(x), axis=0, keepdims=True))
-
-    def tanh(self, x):
-        """Returns tanh function"""
-        return(np.tanh(x))
+        """ returns the activation method to use """
+        return self.__activation
 
     def forward_prop(self, X):
-        """Calculates the forward propagation of the neural network"""
+        """calculates the forward propagation of a deep neural network"""
         self.__cache['A0'] = X
-        for ls in range(self.__L):
-            w = self.__weights['W' + str(ls + 1)]
-            a = self.__cache['A' + str(ls)]
-            b = self.__weights['b' + str(ls + 1)]
-            zx = np.matmul(w, a) + b
-            if ls != self.__L - 1:
-                if self.__activation is 'sig':
-                    self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
-                elif self.__activation is 'tanh':
-                    self.__cache['A' + str(ls + 1)] = self.tanh(zx)
+        for i in range(self.__L):
+            W = self.__weights['W' + str(i + 1)]
+            b = self.__weights['b' + str(i + 1)]
+            Z = np.matmul(W, self.__cache['A' + str(i)]) + b
+            if i != self.__L - 1:
+                if self.__activation == 'sig':
+                    self.__cache['A' + str(i + 1)] = sigmoid(Z)
+                elif self.__activation == 'tanh':
+                    self.__cache['A' + str(i + 1)] = tanh(Z)
             else:
-                self.__cache['A' + str(self.__L)] = self.softmax(zx)
-        return(self.__cache['A' + str(self.__L)], self.__cache)
+                self.__cache['A' + str(i + 1)] = softmax(Z)
+        return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
-        """Calculates the cost of the model using logistic regression"""
+        """calculates the cost of the model using logistic regression"""
         m = len(A[0])
         cost = -np.sum((np.log(A) * Y) / m)
-        return(cost)
+        return cost
 
     def evaluate(self, X, Y):
-        """Evaluates the neural network’s predictions"""
-        A3, cache = self.forward_prop(X)
-        A_max = np.amax(A3, axis=0)
-        return np.where(A3 == A_max, 1, 0), self.cost(Y, A3)
+        """evaluates the network's predictions"""
+        A, cache = self.forward_prop(X)
+        A_max = np.amax(A, axis=0)
+        return np.where(A == A_max, 1, 0), self.cost(Y, A)
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        """Calculates one pass of gradient descent on the neural network"""
-        devsz = []
-        m = np.shape(Y)
-        devlz = devsz.append(self.__cache['A' + str(self.__L)] - Y)
-        for l in range(self.__L, 0, -1):
-            AT = self.__cache['A' + str(l - 1)].T
-            WT = self.__weights['W' + str(l)].T
-            A = self.__cache['A' + str(l - 1)]
-            devg = (A * (1 - A)) if self.__activation is 'sig' else (1 - A**2)
-            devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
-            devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
-            devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
-            self.__weights['W' + str(l)] -= alpha * devWx
-            self.__weights['b' + str(l)] -= alpha * devbx
+        """ calculates one pass of the gradient descent on NN"""
+        dZ = []
+        m = np.shape(Y)[1]
+        L = self.__L
+        sa = self.__activation
+        dZ.append(cache['A' + str(L)] - Y)
+        for l in range(L, 0, -1):
+            A = cache['A' + str(l - 1)]
+            W = self.__weights['W' + str(l)]
+            dg = (A * (1 - A)) if sa == 'sig' else 1 - A ** 2
+            dWdx = np.matmul(dZ[L - l], A.T) / m
+            dbdx = np.sum(dZ[L - l], axis=1, keepdims=True) / m
+            dzdx = dZ.append(np.matmul(W.T, dZ[L - l]) * dg)
+            self.__weights['W' + str(l)] -= alpha * dWdx
+            self.__weights['b' + str(l)] -= alpha * dbdx
 
-    def train(self, X, Y, iterations=5000, alpha=0.05,
-              verbose=True, graph=True, step=100):
-        """Trains the deep neural network"""
-        if type(iterations) is not int:
-            raise TypeError('iterations must be an integer')
-        if not iterations > 0:
-            raise ValueError('iterations must be a positive integer')
-        if type(alpha) is not float:
-            raise TypeError('alpha must be a float')
-        if not alpha > 0:
-            raise ValueError('alpha must be positive')
+    def train(self, X, Y, iterations=5000,
+              alpha=0.05, verbose=True, graph=True, step=100):
+        """trains the DNN by updating the
+        weights and cache private attributes"""
+        if type(iterations) != int:
+            raise TypeError("iterations must be an integer")
+        if iterations <= 0:
+            raise ValueError("iterations must be a positive integer")
+        if type(alpha) != float:
+            raise TypeError("alpha must be a float")
+        if alpha <= 0:
+            raise ValueError("alpha must be positive")
         if verbose is True or graph is True:
-            if type(step) is not int:
-                raise TypeError('step must be an integer')
-            if not step > 0 or step > iterations:
-                raise ValueError('step must be positive and <= iterations')
-        x = []
-        y = []
-        for i in range(iterations + 1):
-            A3, cache = self.forward_prop(X)
+            if type(step) != int:
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
+        cost, iters = [], []
+        for i in range(iterations):
+            A, cache = self.forward_prop(X)
             self.gradient_descent(Y, cache, alpha)
-            cost = self.cost(Y, A3)
+            cst = self.cost(Y, A)
             if verbose is True:
                 if i % step == 0:
-                    print('Cost after {} iterations: {}'.format(i, cost))
-                    x.append(i)
-                    y.append(cost)
+                    print("Cost after {} iterations: {}".format(i, cst))
+                    cost.append(cst)
+                    iters.append(i)
         if graph is True:
-            plt.plot(x, y)
-            plt.title('Training Cost')
-            plt.xlabel('iteration')
-            plt.ylabel('cost')
+            plt.plot(cost, iters)
+            plt.xlabel("iteration")
+            plt.ylabel("cost")
+            plt.title("Training cost")
             plt.show()
-        return(self.evaluate(X, Y))
+        return self.evaluate(X, Y)
 
     def save(self, filename):
-        """Saves the instance object to a file in pickle format"""
-        ext = os.path.splitext(filename)[-1]
+        """ saves the instance of an object in pickle format"""
+        f = open(filename, 'wb')
+        pickle.dump(self, f)
+        f.close()
+        ext = os.path.splitext(filename)[-1].lower()
         if ext != '.pkl':
-            filename = filename + '.pkl'
-        with open(filename, 'wb') as fileObject:
-            pickle.dump(self, fileObject)
+            os.rename(filename, filename + '.pkl')
 
-    @staticmethod
     def load(filename):
-        """Loads a pickled DeepNeuralNetwork object"""
-        if not(os.path.exists(filename)):
+        """ loads a pickled DeepNeuralNetwork object """
+        if not filename:
             return None
-        with open(filename, 'rb') as fileObject:
-            x = pickle.load(fileObject)
-            return(x)
+        if os.path.exists(filename) is not True:
+            return None
+        else:
+            with open(filename, 'rb') as f:
+                pkl = pickle.load(f)
+                return pkl
