@@ -80,7 +80,7 @@ class DeepNeuralNetwork:
                     self.__cache['A' + str(ls + 1)] = self.tanh(zx)
             else:
                 self.__cache['A' + str(self.__L)] = self.softmax(zx)
-            return(self.__cache['A' + str(self.__L)], self.__cache)
+        return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
         """calculates the cost of the model using logistic regression"""
