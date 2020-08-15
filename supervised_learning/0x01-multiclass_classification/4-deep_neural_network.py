@@ -66,20 +66,21 @@ class DeepNeuralNetwork:
         return(np.tanh(x))
 
     def forward_prop(self, X):
-        """calculates the forward propagation of a deep neural network"""
+        """Calculates the forward propagation of the neural network"""
         self.__cache['A0'] = X
-        for i in range(self.__L):
-            W = self.__weights['W' + str(i + 1)]
-            b = self.__weights['b' + str(i + 1)]
-            Z = np.matmul(W, self.__cache['A' + str(i)]) + b
-            if i != self.__L - 1:
-                if self.__activation == 'sig':
-                    self.__cache['A' + str(i + 1)] = self.sigmoid(Z)
-                elif self.__activation == 'tanh':
-                    self.__cache['A' + str(i + 1)] = self.tanh(Z)
+        for ls in range(self.__L):
+            w = self.__weights['W' + str(ls + 1)]
+            a = self.__cache['A' + str(ls)]
+            b = self.__weights['b' + str(ls + 1)]
+            zx = np.matmul(w, a) + b
+            if ls != self.__L - 1:
+                if self.__activation is 'sig':
+                    self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
+                elif self.__activation is 'tanh':
+                    self.__cache['A' + str(ls + 1)] = self.tanh(zx)
             else:
-                self.__cache['A' + str(i + 1)] = self.softmax(Z)
-        return self.__cache['A' + str(self.__L)], self.__cache
+                self.__cache['A' + str(self.__L)] = self.softmax(zx)
+            return(self.__cache['A' + str(self.__L)], self.__cache)
 
     def cost(self, Y, A):
         """calculates the cost of the model using logistic regression"""
