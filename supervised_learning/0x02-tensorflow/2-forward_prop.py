@@ -6,7 +6,6 @@ create_layer = __import__('1-create_layer').create_layer
 
 def forward_prop(x, layer_sizes=[], activations=[]):
     """Creates the forward propagation graph for the neural network"""
-    for ls in layer_sizes:
-        for act in activations:
-            a = create_layer(x, ls, act)
+    for i in range(len(layer_sizes)):
+        a = create_layer(x, layer_sizes[i], layer_sizes[i])
     return(a)
