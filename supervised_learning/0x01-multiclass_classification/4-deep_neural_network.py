@@ -65,7 +65,7 @@ class DeepNeuralNetwork:
 
     def tanh(self, x):
         """Returns tanh function"""
-        return(np.tahn(x))
+        return(np.tanh(x))
 
     def forward_prop(self, X):
         """Calculates the forward propagation of the neural network"""
