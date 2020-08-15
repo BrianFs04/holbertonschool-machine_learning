@@ -95,21 +95,20 @@ class DeepNeuralNetwork:
         return(np.where(A3 == A_max, 1, 0), self.cost(Y, A3))
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        """ calculates one pass of the gradient descent on NN"""
-        dZ = []
-        m = np.shape(Y)[1]
-        L = self.__L
-        sa = self.__activation
-        dZ.append(cache['A' + str(L)] - Y)
-        for l in range(L, 0, -1):
-            A = cache['A' + str(l - 1)]
-            W = self.__weights['W' + str(l)]
-            dg = (A * (1 - A)) if sa == 'sig' else 1 - A ** 2
-            dWdx = np.matmul(dZ[L - l], A.T) / m
-            dbdx = np.sum(dZ[L - l], axis=1, keepdims=True) / m
-            dzdx = dZ.append(np.matmul(W.T, dZ[L - l]) * dg)
-            self.__weights['W' + str(l)] -= alpha * dWdx
-            self.__weights['b' + str(l)] -= alpha * dbdx
+        """Calculates one pass of gradient descent on the neural network"""
+        devsz = []
+        m = np.shape(Y)
+        devlz = devsz.append(self.__cache['A' + str(self.__L)] - Y)
+        for l in range(self.__L, 0, -1):
+            AT = self.__cache['A' + str(l - 1)].T
+            WT = self.__weights['W' + str(l)].T
+            A = self.__cache['A' + str(l - 1)]
+            devg = (A * (1 - A)) if self.__activation is 'sig' else (1 - A**2)
+            devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
+            devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
+            devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
+            self.__weights['W' + str(l)] -= alpha * devWx
+            self.__weights['b' + str(l)] -= alpha * devbx
 
     def train(self, X, Y, iterations=5000,
               alpha=0.05, verbose=True, graph=True, step=100):
@@ -147,21 +146,18 @@ class DeepNeuralNetwork:
         return self.evaluate(X, Y)
 
     def save(self, filename):
-        """ saves the instance of an object in pickle format"""
-        f = open(filename, 'wb')
-        pickle.dump(self, f)
-        f.close()
-        ext = os.path.splitext(filename)[-1].lower()
+        """Saves the instance object to a file in pickle format"""
+        ext = os.path.splitext(filename)[-1]
         if ext != '.pkl':
-            os.rename(filename, filename + '.pkl')
+            filename = filename + '.pkl'
+        with open(filename, 'wb') as fileObject:
+            pickle.dump(self, fileObject)
 
+    @staticmethod
     def load(filename):
-        """ loads a pickled DeepNeuralNetwork object """
-        if not filename:
+        """Loads a pickled DeepNeuralNetwork object"""
+        if not(os.path.exists(filename)):
             return None
-        if os.path.exists(filename) is not True:
-            return None
-        else:
-            with open(filename, 'rb') as f:
-                pkl = pickle.load(f)
-                return pkl
+        with open(filename, 'rb') as fileObject:
+            x = pickle.load(fileObject)
+            return(x)
