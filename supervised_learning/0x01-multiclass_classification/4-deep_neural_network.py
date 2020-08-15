@@ -93,7 +93,8 @@ class DeepNeuralNetwork:
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
         A3, self.__cache = self.forward_prop(X)
-        cont = np.where(A3 >= 0.5, 1, 0)
+        A_max = np.amax(A3, axis=0)
+        cont = np.where(A3 == A_max, 1, 0)
         return(cont, self.cost(Y, A3))
 
     def gradient_descent(self, Y, cache, alpha=0.05):
@@ -108,7 +109,7 @@ class DeepNeuralNetwork:
             if self.__activation is 'sig':
                 devg = (A * (1 - A))
             if self.__activation is 'tahn':
-                devg = (1 - (np.tanh(A))**2)
+                devg = (1 - (A**2))
             devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
             devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
             devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
