@@ -94,7 +94,7 @@ class DeepNeuralNetwork:
         """Evaluates the neural network’s predictions"""
         A3, cache = self.forward_prop(X)
         A_max = np.amax(A3, axis=0)
-        return(np.where(A3 == A_max, 1, 0), self.cost(Y, A3))
+        return np.where(A3 == A_max, 1, 0), self.cost(Y, A3)
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent on the neural network"""
