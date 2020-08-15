@@ -92,7 +92,7 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        A3, self.__cache = self.forward_prop(X)
+        A3, cache = self.forward_prop(X)
         A_max = np.amax(A3, axis=0)
         return(np.where(A3 == A_max, 1, 0), self.cost(Y, A3))
 
@@ -105,7 +105,7 @@ class DeepNeuralNetwork:
             AT = self.__cache['A' + str(l - 1)].T
             WT = self.__weights['W' + str(l)].T
             A = self.__cache['A' + str(l - 1)]
-            devg = (A * (1 - A)) if self.__activation is 'sig' else (1 - (A**2))
+            devg = (A * (1 - A)) if self.__activation is 'sig' else (1 - A**2)
             devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
             devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
             devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
