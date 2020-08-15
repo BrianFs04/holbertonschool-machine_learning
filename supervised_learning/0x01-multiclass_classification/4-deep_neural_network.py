@@ -63,8 +63,8 @@ class DeepNeuralNetwork:
         """Returns softmax function"""
         return(np.exp(x) / np.sum(np.exp(x), axis=0, keepdims=True))
 
-    def tahn(self, x):
-        """Returns tahn function"""
+    def tanh(self, x):
+        """Returns tanh function"""
         return(np.tahn(x))
 
     def forward_prop(self, X):
@@ -79,7 +79,7 @@ class DeepNeuralNetwork:
                 if self.__activation is 'sig':
                     self.__cache['A' + str(ls + 1)] = self.sigmoid(zx)
                 if self.__activation is 'tahn':
-                    self.__cache['A' + str(ls + 1)] = self.tahn(zx)
+                    self.__cache['A' + str(ls + 1)] = self.tanh(zx)
             else:
                 self.__cache['A' + str(self.__L)] = self.softmax(zx)
         return(self.__cache['A' + str(self.__L)], self.__cache)
@@ -109,7 +109,7 @@ class DeepNeuralNetwork:
             if self.__activation is 'sig':
                 devg = (A * (1 - A))
             if self.__activation is 'tahn':
-                devg = (1 - (A**2))
+                devg = (1 - (A * A))
             devWx = np.matmul(devsz[self.__L - l], AT) / m[1]
             devbx = np.sum(devsz[self.__L - l], axis=1, keepdims=True) / m[1]
             devzx = devsz.append(np.matmul(WT, devsz[self.__L - l]) * devg)
@@ -134,7 +134,7 @@ class DeepNeuralNetwork:
                 raise ValueError('step must be positive and <= iterations')
         x = []
         y = []
-        for i in range(iterations):
+        for i in range(iterations + 1):
             A3, self.__cache = self.forward_prop(X)
             self.gradient_descent(Y, self.__cache, alpha)
             cost = self.cost(Y, A3)
