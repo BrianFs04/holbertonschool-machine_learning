@@ -31,7 +31,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
     with tf.Session() as sess:
         init = tf.global_variables_initializer()
         sess.run(init)
-        for i in range(iterations):
+        for i in range(iterations + 1):
             tc, ta = sess.run([loss, accuracy],
                               feed_dict={x: X_train, y: Y_train})
             vc, va = sess.run([loss, accuracy],
