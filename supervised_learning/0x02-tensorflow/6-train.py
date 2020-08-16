@@ -42,7 +42,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
                 print("\tTraining Accuracy: {}".format(ta))
                 print("\tValidation Cost: {}".format(vc))
                 print("\tValidation Accuracy: {}".format(va))
-            if i != range(iterations):
+            if i < iterations:
                 sess.run(train_op, feed_dict={x: X_train, y: Y_train})
         path = saver.save(sess, save_path)
     return(path)
