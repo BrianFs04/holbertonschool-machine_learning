@@ -32,11 +32,11 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
         init = tf.global_variables_initializer()
         sess.run(init)
         for i in range(iterations + 1):
-            sess.run(train_op, feed_dict={x: X_train, y: Y_train})
             tc, ta = sess.run([loss, accuracy],
                               feed_dict={x: X_train, y: Y_train})
             vc, va = sess.run([loss, accuracy],
                               feed_dict={x: X_valid, y: Y_valid})
+            sess.run(train_op, feed_dict={x: X_train, y: Y_train})
             if i % 100 is 0 or i is 0 or i is iterations:
                 print("After {} iterations:".format(i))
                 print("\tTraining Cost: {}".format(tc))
