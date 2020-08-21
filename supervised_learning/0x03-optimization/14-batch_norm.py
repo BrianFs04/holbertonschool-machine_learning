@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""crate_batch_norm_layer"""
+"""create_batch_norm_layer"""
 import tensorflow as tf
 
 
