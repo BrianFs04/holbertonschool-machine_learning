@@ -9,7 +9,7 @@ def batch_norm(Z, gamma, beta, epsilon):
     m = Z.shape[0]
     mean = np.sum(Z, axis=0) / m
     variance = np.sum((Z - mean) ** 2, axis=0) / m
-    sd = np.sqrt(variance)
-    z_norm = (Z - mean) / (sd + epsilon)
+    sd = np.sqrt(variance + epsilon)
+    z_norm = (Z - mean) / sd
     z_tilde = gamma * z_norm + beta
     return(z_tilde)
