@@ -95,25 +95,18 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
 
-    init = tf.global_variables_initializer()
-
     saver = tf.train.Saver()
     with tf.Session() as sess:
+        init = tf.global_variables_initializer()
         sess.run(init)
-        # global initialization
-        train_feed = {x: Data_train[0], y: Data_train[1]}
-        valid_feed = {x: Data_valid[0], y: Data_valid[1]}
-
         for i in range(epochs + 1):
-            T_cost = sess.run(loss, train_feed)
-            T_acc = sess.run(accuracy, train_feed)
-            V_cost = sess.run(loss, valid_feed)
-            V_acc = sess.run(accuracy, valid_feed)
+            tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
+            vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
             print("After {} epochs:".format(i))
-            print('\tTraining Cost: {}'.format(T_cost))
-            print('\tTraining Accuracy: {}'.format(T_acc))
-            print('\tValidation Cost: {}'.format(V_cost))
-            print('\tValidation Accuracy: {}'.format(V_acc))
+            print("\tTraining Cost: {}".format(tc))
+            print("\tTraining Accuracy: {}".format(ta))
+            print("\tValidation Cost: {}".format(vc))
+            print("\tValidation Accuracy: {}".format(va))
 
             if i < epochs:
                 xs, ys = shuffle_data(Data_train[0], Data_train[1])
