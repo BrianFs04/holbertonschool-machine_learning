@@ -3,78 +3,111 @@
 import numpy as np
 import tensorflow as tf
 
-
-def create_layer(prev, n, activation):
-    """Returns the tensor output of the layer"""
-    weights = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    a = tf.layers.Dense(units=n, activation=activation, name='layer',
-                        kernel_initializer=weights).apply(prev)
-    return(a)
-
-
-def create_batch_norm_layer(prev, n, activation):
-    """Creates a batch normalization layer for a
-    neural network in tensorflow"""
-    if activation is None:
-        layer = create_layer(prev, n, activation)
-        return(layer)
-
-    weights = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    z = tf.layers.Dense(units=n, kernel_initializer=weights).apply(prev)
-    mean, variance = tf.nn.moments(z, axes=[0])
-    gamma = tf.Variable(tf.constant(1.0, shape=[n]), True)
-    beta = tf.Variable(tf.constant(0.0, shape=[n]), True)
-    epsilon = tf.constant(1e-8)
-    batch_norm = tf.nn.batch_normalization(z, mean, variance,
-                                           beta, gamma, epsilon)
-    return(activation(batch_norm))
-
-
-def create_placeholders(nx, classes):
-    """Returns two placeholders, x and y, for the neural network"""
-    x = tf.placeholder(tf.float32, [None, nx], "x")
-    y = tf.placeholder(tf.float32, [None, classes], "y")
-    return(x, y)
-
-
-def forward_prop(x, layer_sizes=[], activations=[]):
-    """Creates the forward propagation graph for the neural network"""
-    A = create_batch_norm_layer(x, layer_sizes[0], activations[0])
-    for i in range(1, len(layer_sizes)):
-        A = create_batch_norm_layer(A, layer_sizes[i], activations[i])
-    return(A)
-
-
-def calculate_accuracy(y, y_pred):
-    """Calculates the accuracy of a prediction"""
-    prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_pred, 1))
-    accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
-    return(accuracy)
-
-
-def calculate_loss(y, y_pred):
-    """Calculates the softmax cross-entropy loss of a prediction"""
-    loss = tf.losses.softmax_cross_entropy(y, y_pred)
-    return(loss)
-
-
 def shuffle_data(X, Y):
-    """Shuffles the data points in two matrices the same way"""
-    s = np.random.permutation(X.shape[0])
-    return(X[s], Y[s])
+    """
+    Returns: the shuffled X and Y matrices
+    """
+    vector = np.random.permutation(np.arange(X.shape[0]))
+    X_shu = X[vector]
+    Y_shu = Y[vector]
+    return X_shu, Y_shu
 
 
 def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
-    """Adam optimization algorithm"""
-    Adam = tf.train.AdamOptimizer(alpha, beta1, beta2, epsilon).minimize(loss)
-    return(Adam)
+    """
+    Returns: the Adam optimization operation
+    """
+    a = tf.train.AdamOptimizer(learning_rate=alpha, beta1=beta1,
+                               beta2=beta2, epsilon=epsilon)
+    optimize = a.minimize(loss)
+    return optimize
+
+
+def create_layer(prev, n, activation):
+    """
+    We have to use this function only in the last layer
+    because we dont have to normalize the output
+    Returns: the tensor output of the layer
+    """
+
+    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    A = tf.layers.Dense(units=n, name='layer', activation=activation,
+                        kernel_initializer=init)
+    Y_pred = A(prev)
+    return (Y_pred)
+
+
+def create_batch_norm_layer(prev, n, activation):
+    """
+    Returns: a tensor of the activated output for the layer
+    """
+    if activation is None:
+        A = create_layer(prev, n, activation)
+        return A
+
+    # layers initialization
+    w_init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    layers = tf.layers.Dense(units=n, kernel_initializer=w_init)
+    Z = layers(prev)
+
+    # trainable variables gamma and beta
+    gamma = tf.Variable(tf.constant(1, dtype=tf.float32, shape=[n]),
+                        name='gamma', trainable=True)
+    beta = tf.Variable(tf.constant(0, dtype=tf.float32, shape=[n]),
+                       name='beta', trainable=True)
+    epsilon = tf.constant(1e-8)
+
+    # Normalization Process
+    mean, variance = tf.nn.moments(Z, axes=[0])
+    Z_norm = tf.nn.batch_normalization(x=Z, mean=mean, variance=variance,
+                                       offset=beta, scale=gamma,
+                                       variance_epsilon=epsilon)
+
+    # activation of Z obtained
+    A = activation(Z_norm)
+    return A
+
+
+def forward_prop(x, layers, activations):
+    """
+    forward propagation
+    """
+    A = create_batch_norm_layer(x, layers[0], activations[0])
+    # hidden layers
+    for i in range(1, len(activations)):
+        A = create_batch_norm_layer(A, layers[i], activations[i])
+    return A
+
+
+def calculate_accuracy(y, y_pred):
+    """
+    accuracy of the prediction
+    """
+    index_y = tf.math.argmax(y, axis=1)
+    index_pred = tf.math.argmax(y_pred, axis=1)
+    comp = tf.math.equal(index_y, index_pred)
+    cast = tf.cast(comp, dtype=tf.float32)
+    accuracy = tf.math.reduce_mean(cast)
+    return accuracy
+
+
+def calculate_loss(y, y_pred):
+    """
+    loss of the prediction
+    """
+    return tf.losses.softmax_cross_entropy(y, y_pred)
 
 
 def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
-    """Creates a learning rate decay operation"""
-    rate_op = tf.train.inverse_time_decay(alpha, global_step, decay_step,
-                                          decay_rate, True)
-    return(rate_op)
+    """
+    Returns: the learning rate decay operation
+    """
+    return tf.train.inverse_time_decay(learning_rate=alpha,
+                                       global_step=global_step,
+                                       decay_steps=decay_step,
+                                       decay_rate=decay_rate,
+                                       staircase=True)
+
 
 
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
