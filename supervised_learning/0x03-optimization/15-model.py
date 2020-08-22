@@ -86,7 +86,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
     y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-    
+
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
 
@@ -94,7 +94,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     tf.add_to_collection('loss', loss)
 
 
-    global_step = tf.Variable(0, trainable=False, name="global_step")
+    global_step = tf.Variable(0, trainable=False)
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
@@ -123,8 +123,6 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
             if i < epochs:
                 X_shu, Y_shu = shuffle_data(Data_train[0], Data_train[1])
-                ses.run(global_step.assign(i))
-                a = ses.run(alpha)
 
                 for j in range(mini_batch):
                     ini = j * batch_size
@@ -140,5 +138,6 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print("\tStep {}:".format(j + 1))
                         print("\t\tCost: {}".format(Min_cost))
                         print("\t\tAccuracy: {}".format(Min_acc))
+            ses.run(global_step.assign(i))
         save_path = saver.save(ses, save_path)
     return save_path
