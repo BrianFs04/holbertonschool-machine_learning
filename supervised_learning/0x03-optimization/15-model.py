@@ -77,25 +77,26 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch)
 
-    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
+    x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
+                       name='x')
     tf.add_to_collection('x', x)
+    y = tf.placeholder(tf.float32, shape=[None, Data_train[1].shape[1]],
+                       name='y')
     tf.add_to_collection('y', y)
-
-    y_pred = forward_prop(x, layer_sizes, activations)
+    y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-
-    loss = calculate_loss(y, y_pred)
-    tf.add_to_collection('loss', loss)
-
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
-
-    global_step = tf.Variable(0, trainable=False, name="global_step")
+    loss = calculate_loss(y, y_pred)
+    tf.add_to_collection('loss', loss)
+    
+    # Adam training & learning decay
+    global_step = tf.Variable(0, trainable=False, name='global_step')
+    
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
-
+    
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
-
 
     init = tf.global_variables_initializer()
 
