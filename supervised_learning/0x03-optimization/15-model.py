@@ -68,20 +68,12 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     return(rate_op)
 
 
-
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
 
-    mini_batch = Data_train[0].shape[0] / batch_size
-    if type(mini_batch) is not int:
-        mini_batch = int(mini_batch + 1)
-
-    x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
-                       name='x')
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
     tf.add_to_collection('x', x)
-    y = tf.placeholder(tf.float32, shape=[None, Data_train[1].shape[1]],
-                       name='y')
     tf.add_to_collection('y', y)
 
     y_pred = forward_prop(x, layers, activations)
@@ -100,44 +92,38 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
 
-
-    init = tf.global_variables_initializer()
+    mini_batch = X_train.shape[0] / batch_size
+    if type(mini_batch) is not int:
+      mini_batch = int(mini_batch + 1)
 
     saver = tf.train.Saver()
-    with tf.Session() as ses:
-        ses.run(init)
-        # global initialization
-        train_feed = {x: Data_train[0], y: Data_train[1]}
-        valid_feed = {x: Data_valid[0], y: Data_valid[1]}
+    with tf.Session() as sess:
+      init = tf.global_variables_initializer()
+      sess.run(init)
+      for i in range(epochs + 1):
+        tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
+        vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+        print("After {} epochs:".format(i))
+        print("\tTraining Cost: {}".format(tc))
+        print("\tTraining Accuracy: {}".format(ta))
+        print("\tValidation Cost: {}".format(vc))
+        print("\tValidation Accuracy: {}".format(va))
+      
+        if i < epochs:
+          xs, ys = shuffle_data(X_train, Y_train)
+          for j in range(1, mini_batch + 1):
+            ft = (j - 1) * batch_size
+            lt = j * batch_size
+            if lt > X_train.shape[0]:
+              lt = X_train.shape[0]
+            batch = {x: xs[ft:lt], y: ys[ft:lt]}
+            sess.run(train_op, feed_dict=batch)
+            if j % 100 is 0:
+              cost = sess.run(loss, feed_dict=batch)      
+              accur = sess.run(accuracy, feed_dict=batch)
+              print("\tStep {}:".format(j))
+              print("\t\tCost: {}".format(cost))
+              print("\t\tAccuracy: {}".format(accur))
+      path = saver.save(sess, save_path)
+    return(path)
 
-        for i in range(epochs + 1):
-            T_cost = ses.run(loss, train_feed)
-            T_acc = ses.run(accuracy, train_feed)
-            V_cost = ses.run(loss, valid_feed)
-            V_acc = ses.run(accuracy, valid_feed)
-            print("After {} epochs:".format(i))
-            print('\tTraining Cost: {}'.format(T_cost))
-            print('\tTraining Accuracy: {}'.format(T_acc))
-            print('\tValidation Cost: {}'.format(V_cost))
-            print('\tValidation Accuracy: {}'.format(V_acc))
-
-            if i < epochs:
-                X_shu, Y_shu = shuffle_data(Data_train[0], Data_train[1])
-
-                for j in range(mini_batch):
-                    ini = j * batch_size
-                    fin = (j + 1) * batch_size
-                    if fin > Data_train[0].shape[0]:
-                        fin = Data_train[0].shape[0]
-                    mini_feed = {x: X_shu[ini:fin], y: Y_shu[ini:fin]}
-
-                    ses.run(train_op, feed_dict=mini_feed)
-                    if j != 0 and (j + 1) % 100 == 0:
-                        Min_cost = ses.run(loss, mini_feed)
-                        Min_acc = ses.run(accuracy, mini_feed)
-                        print("\tStep {}:".format(j + 1))
-                        print("\t\tCost: {}".format(Min_cost))
-                        print("\t\tAccuracy: {}".format(Min_acc))
-            ses.run(global_step.assign(i))
-        save_path = saver.save(ses, save_path)
-    return save_path
