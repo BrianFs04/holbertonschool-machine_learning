@@ -136,6 +136,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
             if i < epochs:
                 xs, ys = shuffle_data(X_train, Y_train)
+                ses.run(global_step.assign(i))
+                a = ses.run(alpha)
                 for j in range(1, mini_batch + 1):
                     ft = (j - 1) * batch_size
                     lt = j * batch_size
