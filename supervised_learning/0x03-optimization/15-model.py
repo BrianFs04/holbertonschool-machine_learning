@@ -73,10 +73,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
 
-    X_train, Y_train = Data_train
-    X_valid, Y_valid = Data_valid
-
-    x, y = create_placeholders(X_train.shape[1], Y_train.shape[1])
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
     tf.add_to_collection('x', x)
     tf.add_to_collection('y', y)
 
@@ -95,7 +92,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
 
-    mini_batch = X_train.shape[0] / batch_size
+    mini_batch = Data_train[0].shape[0] / batch_size
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch)
 
