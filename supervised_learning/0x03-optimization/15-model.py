@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
-"""
-create_layer
-create_batch_norm_layer
-create_placeholders
-forward_prop
-calculate_accuracy
-calculate_loss
-shuffle_data
-create_Adam_op
-learning_rate_decay
-model
-"""
+"""Model optim"""
 import numpy as np
 import tensorflow as tf
 
