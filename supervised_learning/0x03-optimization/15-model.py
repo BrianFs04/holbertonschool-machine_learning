@@ -100,8 +100,10 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
         init = tf.global_variables_initializer()
         sess.run(init)
         for i in range(epochs + 1):
-            tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
-            vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            tc, ta = sess.run([loss, accuracy], feed_dict={x: Data_train[0],
+                                                           y: Data_train[1]})
+            vc, va = sess.run([loss, accuracy], feed_dict={x: Data_valid[0],
+                                                           y: Data_valid[1]})
             print("After {} epochs:".format(i))
             print("\tTraining Cost: {}".format(tc))
             print("\tTraining Accuracy: {}".format(ta))
