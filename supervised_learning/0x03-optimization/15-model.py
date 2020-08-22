@@ -76,23 +76,20 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch + 1)
 
-    x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
-                       name='x')
+    x, y = create_placeholders(Data_train.shape[1], Data_train.shape[1])
     tf.add_to_collection('x', x)
-    y = tf.placeholder(tf.float32, shape=[None, Data_train[1].shape[1]],
-                       name='y')
     tf.add_to_collection('y', y)
+
     y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-
-    accuracy = calculate_accuracy(y, y_pred)
-    tf.add_to_collection('accuracy', accuracy)
 
     loss = calculate_loss(y, y_pred)
     tf.add_to_collection('loss', loss)
 
+    accuracy = calculate_accuracy(y, y_pred)
+    tf.add_to_collection('accuracy', accuracy)
 
-    global_step = tf.Variable(0, trainable=False, name="global_step")
+    global_step = tf.Variable(0, trainable=False)
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
@@ -124,7 +121,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                 ses.run(global_step.assign(i))
                 a = ses.run(alpha)
 
-                for j in range(mini_iter):
+                for j in range(mini_batch):
                     ini = j * batch_size
                     fin = (j + 1) * batch_size
                     if fin > Data_train[0].shape[0]:
