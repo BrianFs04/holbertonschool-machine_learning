@@ -74,10 +74,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           epochs=5, save_path='/tmp/model.ckpt'):
 
     mini_batch = Data_train[0].shape[0] / batch_size
-    if (mini_batch).is_integer() is True:
-        mini_batch = int(mini_batch)
-    else:
-        mini_batch = int(mini_batch) + 1
+    if type(mini_batch) is not int:
+        mini_batch = int(mini_batch + 1)
 
     x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
                        name='x')
