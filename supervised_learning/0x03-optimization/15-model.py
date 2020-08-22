@@ -71,7 +71,7 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
-_iter = Data_train[0].shape[0] / batch_size
+    mini_iter = Data_train[0].shape[0] / batch_size
     if (mini_iter).is_integer() is True:
         mini_iter = int(mini_iter)
     else:
@@ -123,20 +123,18 @@ _iter = Data_train[0].shape[0] / batch_size
                 X_shu, Y_shu = shuffle_data(Data_train[0], Data_train[1])
                 ses.run(global_step.assign(i))
                 a = ses.run(alpha)
-
-                for j in range(mini_iter):
-                    ini = j * batch_size
-                    fin = (j + 1) * batch_size
-                    if fin > Data_train[0].shape[0]:
-                        fin = Data_train[0].shape[0]
-                    mini_feed = {x: X_shu[ini:fin], y: Y_shu[ini:fin]}
-
-                    ses.run(train_op, feed_dict=mini_feed)
-                    if j != 0 and (j + 1) % 100 == 0:
-                        Min_cost = ses.run(loss, mini_feed)
-                        Min_acc = ses.run(accuracy, mini_feed)
-                        print("\tStep {}:".format(j + 1))
-                        print("\t\tCost: {}".format(Min_cost))
-                        print("\t\tAccuracy: {}".format(Min_acc))
+                for j in range(1, mini_batch + 1):
+                    ft = (j - 1) * batch_size
+                    lt = j * batch_size
+                    if lt > X_train.shape[0]:
+                        lt = X_train.shape[0]
+                    batch = {x: xs[ft:lt], y: ys[ft:lt]}
+                    sess.run(train_op, feed_dict=batch)
+                    if j % 100 is 0:
+                        cost = sess.run(loss, feed_dict=batch)
+                        accur = sess.run(accuracy, feed_dict=batch)
+                        print("\tStep {}:".format(j))
+                        print("\t\tCost: {}".format(cost))
+                        print("\t\tAccuracy: {}".format(accur))
         save_path = saver.save(ses, save_path)
     return save_path
