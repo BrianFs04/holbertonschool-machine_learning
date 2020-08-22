@@ -120,7 +120,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
             print('\tValidation Accuracy: {}'.format(V_acc))
 
             if i < epochs:
-                X_shu, Y_shu = shuffle_data(Data_train[0], Data_train[1])
+                xs, ys = shuffle_data(Data_train[0], Data_train[1])
                 ses.run(global_step.assign(i))
                 a = ses.run(alpha)
                 for j in range(1, mini_iter + 1):
