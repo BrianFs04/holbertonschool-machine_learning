@@ -19,10 +19,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
         train_op = tf.get_collection("train_op")[0]
 
         mini_batch = X_train.shape[0] / batch_size
-        if type(mini_batch) is int:
-            mini_batch = int(mini_batch)
-        else:
-            mini_batch = int(mini_batch + 1)
+        if type(mini_batch) is not int:
+            mini_batch = (int(mini_batch) + 1)
 
         for i in range(epochs + 1):
             tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train,
