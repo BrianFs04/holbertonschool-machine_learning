@@ -92,11 +92,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     tf.add_to_collection('train_op', train_op)
 
     mini_batch = Data_train[0].shape[0] / batch_size
-    if (mini_batch).is_integer() is True:
-        mini_batch = int(mini_batch)
-    else:
+    if type(mini_batch) is not int:
         mini_batch = int(mini_batch) + 1
-
 
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
