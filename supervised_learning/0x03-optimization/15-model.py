@@ -73,10 +73,11 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
 
-    X_train, Y_train = Data_train
-    X_valid, Y_valid = Data_valid
+    mini_batch = Data_train[0].shape[0] / batch_size
+    if type(mini_batch) is not int:
+        mini_batch = int(mini_batch + 1)
 
-    x, y = create_placeholders(X_train.shape[1], Y_train.shape[1])
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[0].shape[1])
     tf.add_to_collection('x', x)
     tf.add_to_collection('y', y)
 
@@ -85,19 +86,15 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
     loss = calculate_loss(y, y_pred)
     tf.add_to_collection('loss', loss)
-                                        
+
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
 
-    global_step = tf.Variable(0, trainable=False)
+    global_step = tf.Variable(0, trainable=False, name="global_step")
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
-
-    mini_batch = Data_train[0].shape[0] / batch_size
-    if type(mini_batch) is not int:
-        mini_batch = int(mini_batch + 1)
 
 
     init = tf.global_variables_initializer()
