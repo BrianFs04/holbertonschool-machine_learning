@@ -77,7 +77,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch + 1)
 
-    x, y = create_placeholders(Data_train[0].shape[1], Data_train[0].shape[1])
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
     tf.add_to_collection('x', x)
     tf.add_to_collection('y', y)
 
