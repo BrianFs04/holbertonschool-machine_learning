@@ -40,7 +40,7 @@ def create_placeholders(nx, classes):
 def forward_prop(x, layer_sizes=[], activations=[]):
     """Creates the forward propagation graph for the neural network"""
     A = create_batch_norm_layer(x, layer_sizes[0], activations[0])
-    for i in range(1, len(activations)):
+    for i in range(1, len(layer_sizes)):
         A = create_batch_norm_layer(A, layer_sizes[i], activations[i])
     return(A)
 
@@ -99,7 +99,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
 
-    alpha = learning_rate_decay(alpha, decay_rate, 0, 1)
+    global_step = tf.Variable(0, False)
+    alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
@@ -138,5 +139,6 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print("\tStep {}:".format(j))
                         print("\t\tCost: {}".format(cost))
                         print("\t\tAccuracy: {}".format(accur))
+            sess.run(tf.assign(global_step, global_step + 1))
         path = saver.save(sess, save_path)
     return(path)
