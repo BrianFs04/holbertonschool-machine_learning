@@ -35,7 +35,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
 
             if i < epochs:
                 xs, ys = shuffle_data(X_train, Y_train)
-                for j in range(1, mini_batch):
+                for j in range(1, mini_batch + 1):
                     ft = (j - 1) * batch_size
                     lt = j * batch_size
                     if lt > X_train.shape[0]:
