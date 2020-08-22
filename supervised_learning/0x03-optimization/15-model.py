@@ -77,12 +77,10 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     else:
         mini_iter = int(mini_iter) + 1
 
-    # building model
-    x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
-                       name='x')
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
     tf.add_to_collection('x', x)
-    y = tf.placeholder(tf.float32, shape=[None, Data_train[1].shape[1]],
-                       name='y')
+    tf.add_to_collection('y', y)
+
     tf.add_to_collection('y', y)
     y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
