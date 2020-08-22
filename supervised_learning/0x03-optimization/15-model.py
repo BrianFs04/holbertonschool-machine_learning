@@ -11,6 +11,7 @@ create_Adam_op
 learning_rate_decay
 model
 """
+import numpy as np
 import tensorflow as tf
 
 
