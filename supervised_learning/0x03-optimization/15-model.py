@@ -94,10 +94,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     """Builds, trains, and saves a neural network model in tensorflow using
     Adam optimization, mini-batch gradient descent, learning rate decay,
     and batch normalization"""
-    X_train, Y_train = Data_train
-    X_valid, Y_valid = Data_valid
-
-    x, y = create_placeholders(X_train.shape[1], Y_train.shape[1])
+    x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
     tf.add_to_collection('x', x)
     tf.add_to_collection('y', y)
 
@@ -110,12 +107,13 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
 
-    alpha = learning_rate_decay(alpha, decay_rate, 0, 1)
+    global_step = tf.Variable(0, False)
+    alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
 
-    mini_batch = X_train.shape[0] / batch_size
+    mini_batch = Data_train[0].shape[0] / batch_size
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch + 1)
 
@@ -123,6 +121,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     with tf.Session() as sess:
         init = tf.global_variables_initializer()
         sess.run(init)
+        X_train, Y_train = Data_train
+        X_valid, Y_valid = Data_valid
         for i in range(epochs + 1):
             tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train,
                                                            y: Y_train})
