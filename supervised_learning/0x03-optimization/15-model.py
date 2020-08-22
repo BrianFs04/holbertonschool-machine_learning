@@ -71,30 +71,33 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
+_iter = Data_train[0].shape[0] / batch_size
+    if (mini_iter).is_integer() is True:
+        mini_iter = int(mini_iter)
+    else:
+        mini_iter = int(mini_iter) + 1
 
-    mini_batch = X_train.shape[0] / batch_size
-    if type(mini_batch) is not int:
-        mini_batch = int(mini_batch + 1)
-
-    x, y = create_placeholders(Data_train.shape[1], Data_train.shape[1])
+    # building model
+    x = tf.placeholder(tf.float32, shape=[None, Data_train[0].shape[1]],
+                       name='x')
     tf.add_to_collection('x', x)
+    y = tf.placeholder(tf.float32, shape=[None, Data_train[1].shape[1]],
+                       name='y')
     tf.add_to_collection('y', y)
-
     y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-
+    accuracy = calculate_accuracy(y, y_pred)
+    tf.add_to_collection('accuracy', accuracy)
     loss = calculate_loss(y, y_pred)
     tf.add_to_collection('loss', loss)
 
-    accuracy = calculate_accuracy(y, y_pred)
-    tf.add_to_collection('accuracy', accuracy)
+    # Adam training & learning decay
+    global_step = tf.Variable(0, trainable=False, name='global_step')
 
-    global_step = tf.Variable(0, trainable=False)
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
     tf.add_to_collection('train_op', train_op)
-
 
     init = tf.global_variables_initializer()
 
@@ -121,7 +124,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                 ses.run(global_step.assign(i))
                 a = ses.run(alpha)
 
-                for j in range(mini_batch):
+                for j in range(mini_iter):
                     ini = j * batch_size
                     fin = (j + 1) * batch_size
                     if fin > Data_train[0].shape[0]:
