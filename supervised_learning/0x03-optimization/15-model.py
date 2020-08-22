@@ -84,9 +84,9 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                        name='y')
     tf.add_to_collection('y', y)
 
-    y_pred = forward_prop(x, layer_sizes, activations)
+    y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-
+    
     accuracy = calculate_accuracy(y, y_pred)
     tf.add_to_collection('accuracy', accuracy)
 
