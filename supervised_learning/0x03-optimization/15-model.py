@@ -98,32 +98,32 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
     saver = tf.train.Saver()
     with tf.Session() as sess:
-      init = tf.global_variables_initializer()
-      sess.run(init)
-      for i in range(epochs + 1):
-        tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
-        vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
-        print("After {} epochs:".format(i))
-        print("\tTraining Cost: {}".format(tc))
-        print("\tTraining Accuracy: {}".format(ta))
-        print("\tValidation Cost: {}".format(vc))
-        print("\tValidation Accuracy: {}".format(va))
-      
-        if i < epochs:
-          xs, ys = shuffle_data(X_train, Y_train)
-          for j in range(1, mini_batch + 1):
-            ft = (j - 1) * batch_size
-            lt = j * batch_size
-            if lt > X_train.shape[0]:
-              lt = X_train.shape[0]
-            batch = {x: xs[ft:lt], y: ys[ft:lt]}
-            sess.run(train_op, feed_dict=batch)
-            if j % 100 is 0:
-              cost = sess.run(loss, feed_dict=batch)      
-              accur = sess.run(accuracy, feed_dict=batch)
-              print("\tStep {}:".format(j))
-              print("\t\tCost: {}".format(cost))
-              print("\t\tAccuracy: {}".format(accur))
-      path = saver.save(sess, save_path)
+        init = tf.global_variables_initializer()
+        sess.run(init)
+        for i in range(epochs + 1):
+            tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
+            vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            print("After {} epochs:".format(i))
+            print("\tTraining Cost: {}".format(tc))
+            print("\tTraining Accuracy: {}".format(ta))
+            print("\tValidation Cost: {}".format(vc))
+            print("\tValidation Accuracy: {}".format(va))
+
+            if i < epochs:
+                xs, ys = shuffle_data(X_train, Y_train)
+                for j in range(1, mini_batch + 1):
+                    ft = (j - 1) * batch_size
+                    lt = j * batch_size
+                    if lt > X_train.shape[0]:
+                        lt = X_train.shape[0]
+                    batch = {x: xs[ft:lt], y: ys[ft:lt]}
+                    sess.run(train_op, feed_dict=batch)
+                    if j % 100 is 0:
+                        cost = sess.run(loss, feed_dict=batch)
+                        accur = sess.run(accuracy, feed_dict=batch)
+                        print("\tStep {}:".format(j))
+                        print("\t\tCost: {}".format(cost))
+                        print("\t\tAccuracy: {}".format(accur))
+        path = saver.save(sess, save_path)
     return(path)
 
