@@ -102,17 +102,17 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     init = tf.global_variables_initializer()
 
     saver = tf.train.Saver()
-    with tf.Session() as ses:
-        ses.run(init)
+    with tf.Session() as sess:
+        sess.run(init)
         # global initialization
         train_feed = {x: Data_train[0], y: Data_train[1]}
         valid_feed = {x: Data_valid[0], y: Data_valid[1]}
 
         for i in range(epochs + 1):
-            T_cost = ses.run(loss, train_feed)
-            T_acc = ses.run(accuracy, train_feed)
-            V_cost = ses.run(loss, valid_feed)
-            V_acc = ses.run(accuracy, valid_feed)
+            T_cost = sess.run(loss, train_feed)
+            T_acc = sess.run(accuracy, train_feed)
+            V_cost = sess.run(loss, valid_feed)
+            V_acc = sess.run(accuracy, valid_feed)
             print("After {} epochs:".format(i))
             print('\tTraining Cost: {}'.format(T_cost))
             print('\tTraining Accuracy: {}'.format(T_acc))
@@ -121,8 +121,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
             if i < epochs:
                 xs, ys = shuffle_data(Data_train[0], Data_train[1])
-                ses.run(global_step.assign(i))
-                a = ses.run(alpha)
+                sess.run(global_step.assign(i))
+                a = sess.run(alpha)
                 for j in range(1, mini_iter + 1):
                     ft = (j - 1) * batch_size
                     lt = j * batch_size
@@ -136,5 +136,5 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print("\tStep {}:".format(j))
                         print("\t\tCost: {}".format(cost))
                         print("\t\tAccuracy: {}".format(accur))
-        save_path = saver.save(ses, save_path)
+        save_path = saver.save(sess, save_path)
     return save_path
