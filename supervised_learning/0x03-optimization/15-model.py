@@ -71,7 +71,7 @@ def calculate_loss(y, y_pred):
 def shuffle_data(X, Y):
     """Shuffles the data points in two matrices the same way"""
     s = np.random.permutation(X.shape[0])
-    return (X[s], Y[s])
+    return(X[s], Y[s])
 
 
 def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
@@ -138,8 +138,8 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                 for j in range(1, mini_batch + 1):
                     ft = (j - 1) * batch_size
                     lt = j * batch_size
-                    if lt > Data_train[0].shape[0]:
-                        lt = Data_train[0].shape[0]
+                    if lt > X_train.shape[0]:
+                        lt = X_train.shape[0]
                     batch = {x: xs[ft:lt], y: ys[ft:lt]}
                     sess.run(train_op, feed_dict=batch)
                     if j % 100 is 0:
