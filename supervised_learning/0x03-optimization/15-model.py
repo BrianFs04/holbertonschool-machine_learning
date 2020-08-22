@@ -71,6 +71,7 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
           beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
           epochs=5, save_path='/tmp/model.ckpt'):
+
     mini_batch = Data_train[0].shape[0] / batch_size
     if type(mini_batch) is not int:
         mini_batch = int(mini_batch) + 1
@@ -79,17 +80,16 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     tf.add_to_collection('x', x)
     tf.add_to_collection('y', y)
 
-    tf.add_to_collection('y', y)
     y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection('y_pred', y_pred)
-    accuracy = calculate_accuracy(y, y_pred)
-    tf.add_to_collection('accuracy', accuracy)
+
     loss = calculate_loss(y, y_pred)
     tf.add_to_collection('loss', loss)
 
-    # Adam training & learning decay
-    global_step = tf.Variable(0, trainable=False, name='global_step')
+    accuracy = calculate_accuracy(y, y_pred)
+    tf.add_to_collection('accuracy', accuracy)
 
+    global_step = tf.Variable(0, trainable=False)
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
@@ -119,7 +119,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                 xs, ys = shuffle_data(Data_train[0], Data_train[1])
                 sess.run(global_step.assign(i))
                 a = sess.run(alpha)
-                for j in range(1, mini_iter + 1):
+                for j in range(1, mini_batch + 1):
                     ft = (j - 1) * batch_size
                     lt = j * batch_size
                     if lt > Data_train[0].shape[0]:
