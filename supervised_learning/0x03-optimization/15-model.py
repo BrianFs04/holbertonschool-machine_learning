@@ -96,34 +96,44 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     if type(mini_batch) is not int:
       mini_batch = int(mini_batch + 1)
 
+    init = tf.global_variables_initializer()
+
     saver = tf.train.Saver()
-    with tf.Session() as sess:
-        init = tf.global_variables_initializer()
-        sess.run(init)
+    with tf.Session() as ses:
+        ses.run(init)
+        # global initialization
+        train_feed = {x: Data_train[0], y: Data_train[1]}
+        valid_feed = {x: Data_valid[0], y: Data_valid[1]}
+
         for i in range(epochs + 1):
-            tc, ta = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
-            vc, va = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            T_cost = ses.run(loss, train_feed)
+            T_acc = ses.run(accuracy, train_feed)
+            V_cost = ses.run(loss, valid_feed)
+            V_acc = ses.run(accuracy, valid_feed)
             print("After {} epochs:".format(i))
-            print("\tTraining Cost: {}".format(tc))
-            print("\tTraining Accuracy: {}".format(ta))
-            print("\tValidation Cost: {}".format(vc))
-            print("\tValidation Accuracy: {}".format(va))
+            print('\tTraining Cost: {}'.format(T_cost))
+            print('\tTraining Accuracy: {}'.format(T_acc))
+            print('\tValidation Cost: {}'.format(V_cost))
+            print('\tValidation Accuracy: {}'.format(V_acc))
 
             if i < epochs:
-                xs, ys = shuffle_data(X_train, Y_train)
-                for j in range(1, mini_batch + 1):
-                    ft = (j - 1) * batch_size
-                    lt = j * batch_size
-                    if lt > X_train.shape[0]:
-                        lt = X_train.shape[0]
-                    batch = {x: xs[ft:lt], y: ys[ft:lt]}
-                    sess.run(train_op, feed_dict=batch)
-                    if j % 100 is 0:
-                        cost = sess.run(loss, feed_dict=batch)
-                        accur = sess.run(accuracy, feed_dict=batch)
-                        print("\tStep {}:".format(j))
-                        print("\t\tCost: {}".format(cost))
-                        print("\t\tAccuracy: {}".format(accur))
-        path = saver.save(sess, save_path)
-    return(path)
+                X_shu, Y_shu = shuffle_data(Data_train[0], Data_train[1])
+                ses.run(global_step.assign(i))
+                a = ses.run(alpha)
 
+                for j in range(mini_iter):
+                    ini = j * batch_size
+                    fin = (j + 1) * batch_size
+                    if fin > Data_train[0].shape[0]:
+                        fin = Data_train[0].shape[0]
+                    mini_feed = {x: X_shu[ini:fin], y: Y_shu[ini:fin]}
+
+                    ses.run(train_op, feed_dict=mini_feed)
+                    if j != 0 and (j + 1) % 100 == 0:
+                        Min_cost = ses.run(loss, mini_feed)
+                        Min_acc = ses.run(accuracy, mini_feed)
+                        print("\tStep {}:".format(j + 1))
+                        print("\t\tCost: {}".format(Min_cost))
+                        print("\t\tAccuracy: {}".format(Min_acc))
+        save_path = saver.save(ses, save_path)
+    return save_path
