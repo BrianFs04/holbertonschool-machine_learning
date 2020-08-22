@@ -15,7 +15,7 @@ def create_layer(prev, n, activation):
 def create_batch_norm_layer(prev, n, activation):
     """Creates a batch normalization layer for a
     neural network in tensorflow"""
-    if not activation:
+    if activation is None:
         layer = create_layer(prev, n, activation)
         return(layer)
 
@@ -100,6 +100,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     tf.add_to_collection('accuracy', accuracy)
 
     global_step = tf.Variable(0, False)
+    global_increase = tf.assign(global_step, global_step + 1)
     alpha = learning_rate_decay(alpha, decay_rate, global_step, 1)
 
     train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
@@ -139,6 +140,6 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print("\tStep {}:".format(j))
                         print("\t\tCost: {}".format(cost))
                         print("\t\tAccuracy: {}".format(accur))
-            sess.run(tf.assign(global_step, global_step + 1))
+            sess.run(global_increase)
         path = saver.save(sess, save_path)
     return(path)
