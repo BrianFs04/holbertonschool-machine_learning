@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """f1_score"""
 import numpy as np
+sensitivity = __import__('1-sensitivity').sensitivity
+precision = __import__('2-precision').precision
 
 
 def f1_score(confusion):
     """Calculates the F1 score of a confusion matrix"""
-    tp = np.diagonal(confusion)
-    fp = np.sum(confusion, axis=0) - tp
-    fn = np.sum(confusion, axis=1) - tp
-    f1 = 2 * tp / ((2 * tp) + fp + fn)
+    PPV = precision(confusion)
+    TPR = sensitivity(confusion)
+    f1 = 2 * ((PPV * TPR) / (PPV + TPR))
     return(f1)
