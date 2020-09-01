@@ -7,5 +7,5 @@ def train_model(network, data, labels, batch_size, epochs,
                 validation_data=None, verbose=True, shuffle=False):
     """Update the function to also analyze validation data"""
     history = network.fit(data, labels, batch_size, epochs, verbose,
-                          shuffle=shuffle, validation_data=validation_data)
+                          validation_data=validation_data, shuffle=shuffle)
     return(history)
