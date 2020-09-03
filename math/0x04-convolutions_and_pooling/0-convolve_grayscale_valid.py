@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
 """convolve_grayscale_valid"""
 import numpy as np
-from math import ceil, floor
 
 
 def convolve_grayscale_valid(images, kernel):
     """Performs a valid convolution on grayscale image"""
-    # strides for height and width
-    strides = (1, 1)
     # number of images, input height and input width
     m, h, w = images.shape
     # filter height and filter width
     kh, kw = kernel.shape
 
     # outputs when the padding is "valid"
-    output_h = int(floor(float(h - kh + 1) / float(strides[0])))
-    output_w = int(floor(float(w - kw + 1) / float(strides[1])))
+    output_h = h - kh + 1
+    output_w = w - kw + 1
 
     # convolution output
     output = np.zeros((m, output_h, output_w))
@@ -31,4 +28,5 @@ def convolve_grayscale_valid(images, kernel):
             res = np.sum(res, axis=1)
             res = np.sum(res, axis=1)
             output[:, i, j] = res
+
     return(output)
