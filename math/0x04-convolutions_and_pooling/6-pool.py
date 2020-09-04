@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pool"""
+"""pool function"""
 import numpy as np
 
 
