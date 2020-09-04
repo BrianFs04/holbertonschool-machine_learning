@@ -11,8 +11,8 @@ def convolve_grayscale_same(images, kernel):
     kh, kw = kernel.shape
 
     # Calculates padding height and width
-    ph = max((kh - 1) // 2, 0)
-    pw = max((kw - 1) // 2, 0)
+    ph = max((kh - 1) // 2, kh // 2)
+    pw = max((kw - 1) // 2, kw // 2)
 
     # Convolution output
     output = np.zeros((m, h, w))
