@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+"""convolve_grayscale_padding"""
 import numpy as np
 
 
 def convolve_grayscale_padding(images, kernel, padding):
+    """Prforms a convolution on grayscale images with custom padding"""
     # number of images, input height and input width
     m, h, w = images.shape
     # filter height and filter width
