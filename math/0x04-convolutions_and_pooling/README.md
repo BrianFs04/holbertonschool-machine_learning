@@ -16,7 +16,7 @@ Write a function `def convolve_grayscale_valid(images, kernel):` that performs a
 (50000, 28, 28)\
 (50000, 26, 26)
 
-![Valid convolution](https://i.ibb.co/tMzkBKL/Valid-Convolution.png)
+![Valid convolution](https://i.ibb.co/HXZ7cDg/Valid-Convolution.png)
 
 ---
 ## Author
