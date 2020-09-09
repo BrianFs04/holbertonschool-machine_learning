@@ -4,7 +4,7 @@ import numpy as np
 
 
 def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
-    """Performs back propagation over a pooling layer of a neural network"""
+    """Performs forward propagation over a pooling layer of a neural network"""
     # strides for height and width
     sh, sw = stride
     # number of examples, height of the previous layer,
@@ -26,12 +26,13 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
                 for ch in range(c):
                     A = dA[i, y, x, ch]
                     # pooling
+                    image = A_prev[:, y * sh:y * sh + kh, x * sw:x * sw + kw]
                     if mode == 'max':
-                        res = np.max(A)
+                        res = np.max(image)
                         dX[i, y * sh:y * sh + kh,
-                           x * sw:x * sw + kw, ch] += res
+                           x * sw:x * sw + kw, ch] += A * res
                     elif mode == 'avg':
-                        res = np.mean(A)
+                        res = np.mean(image)
                         dX[i, y * sh:y * sh + kh,
-                           x * sw:x * sw + kw, ch] += res
+                           x * sw:x * sw + kw, ch] += A * res
     return(dX)
