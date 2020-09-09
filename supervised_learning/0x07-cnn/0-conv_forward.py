@@ -17,8 +17,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
 
     if padding == 'same':
         # Calculate the number of zeros which are needed to add as padding
-        ph = max((h - 1) * sh + kh - h, 0)
-        pw = max((w - 1) * sw + kw - w, 0)
+        ph = max((h_prev - 1) * sh + kh - h_prev, 0)
+        pw = max((w_prev - 1) * sw + kw - w_prev, 0)
         ph = -(-ph // 2)
         pw = -(-pw // 2)
     elif padding == 'valid':
@@ -40,8 +40,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
 
     # Loop over every pixel of the output
     for ch in range(c_new):
-        for x in range(output_w):
-            for y in range(output_h):
+        for y in range(output_h):
+            for x in range(output_w):
                 # creating matrices 3x3x1
                 image = images_padded[:, y * sh:y * sh + kh,
                                       x * sw:x * sw + kw]
