@@ -25,14 +25,15 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
             for x in range(output_w):
                 for ch in range(c):
                     A = dA[i, y, x, ch]
+                    image = A_prev[i, y * sh:y * sh + kh,
+                                   x * sw:x * sw + kw, ch]
                     # pooling
-                    image = A_prev[:, y * sh:y * sh + kh, x * sw:x * sw + kw]
                     if mode == 'max':
-                        res = np.max(image)
+                        res = (image == np.max(image))
                         dX[i, y * sh:y * sh + kh,
                            x * sw:x * sw + kw, ch] += A * res
                     elif mode == 'avg':
-                        res = np.mean(image)
+                        res = A / kh / kw
                         dX[i, y * sh:y * sh + kh,
-                           x * sw:x * sw + kw, ch] += A * res
+                           x * sw:x * sw + kw, ch] += np.ones((kh, kw)) * res
     return(dX)
