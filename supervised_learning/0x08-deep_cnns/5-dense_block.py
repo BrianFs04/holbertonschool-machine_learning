@@ -22,4 +22,4 @@ def dense_block(X, nb_filters, growth_rate, layers):
         concat_output.append(output)
         nb_filters += growth_rate
 
-    return(concat_output, nb_filters)
+    return(concat_output[-1], nb_filters)
