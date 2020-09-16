@@ -8,7 +8,7 @@ def projection_block(A_prev, filters, s=2):
     F11, F3, F12 = filters
 
     # First component of main path
-    conv1 = K.layers.Conv2D(filters=F11,strides=s, kernel_size=1,
+    conv1 = K.layers.Conv2D(filters=F11, strides=s, kernel_size=1,
                             kernel_initializer="he_normal")(A_prev)
     norm1 = K.layers.BatchNormalization(axis=3)(conv1)
     act1 = K.layers.Activation("relu")(norm1)
