@@ -7,8 +7,7 @@ def transition_layer(X, nb_filters, compression):
     """Builds a transition layer"""
     norm1 = K.layers.BatchNormalization()(X)
     act1 = K.layers.Activation("relu")(norm1)
-    nb_maps = X.shape[3]
-    nb_maps = int(compression * nb_maps)
+    nb_maps = int(compression * nb_filters)
     conv1 = K.layers.Conv2D(filters=nb_maps, kernel_size=1,
                             kernel_initializer="he_normal",
                             padding="same")(act1)
