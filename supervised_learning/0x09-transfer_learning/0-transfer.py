@@ -42,10 +42,13 @@ if __name__ == '__main__':
     model.add(K.layers.UpSampling2D())
     model.add(K.layers.BatchNormalization())
     model.add(vgg_model)
-    model.add(K.layers.Dense(512, activation='relu'))
+    model.add(K.layers.BatchNormalization())
+    model.add(K.layers.Dense(128, activation='relu'))
     model.add(K.layers.Dropout(0.3))
-    model.add(K.layers.Dense(256, activation='relu'))
+    model.add(K.layers.BatchNormalization())
+    model.add(K.layers.Dense(64, activation='relu'))
     model.add(K.layers.Dropout(0.3))
+    model.add(K.layers.BatchNormalization())
     model.add(K.layers.Dense(classes, activation='softmax'))
 
     model.compile(optimizer=K.optimizers.RMSprop(lr=3e-5),
