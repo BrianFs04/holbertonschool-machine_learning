@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Yolo"""
+"""Yolo (You only look once)"""
 import tensorflow.keras as K
 
 
