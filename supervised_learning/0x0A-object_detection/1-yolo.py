@@ -1,4 +1,4 @@
-  #!/usr/bin/env python3
+#!/usr/bin/env python3
 """Yolo (You only look once)"""
 import tensorflow.keras as K
 import numpy as np
