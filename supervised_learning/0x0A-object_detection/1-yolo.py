@@ -91,6 +91,6 @@ class Yolo:
             boxes.append(outputs[i][..., 0:4])
             # objectiveness score between 0 and 1
             box_confidences.append(self.sigmoid(outputs[i][..., 4:5]))
-            # probability of classes; pass through a sigmoid gate to obtain prob.
+            # probability of classes
             box_class_probs.append(self.sigmoid(outputs[i][..., 5:]))
         return(boxes, box_confidences, box_class_probs)
