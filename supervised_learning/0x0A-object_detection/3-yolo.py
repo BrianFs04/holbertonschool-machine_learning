@@ -128,7 +128,7 @@ class Yolo:
         return(filtered_boxes, box_classes, box_scores)
 
     def iou(self, filtered_boxes, scores):
-        """Returns the insertion over union result"""
+        """Returns the intersection over union result"""
         # grab the coordinates of the bounding boxes
         x1 = filtered_boxes[:, 0]
         y1 = filtered_boxes[:, 1]
